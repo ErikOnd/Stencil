@@ -1,0 +1,20 @@
+.token {
+  color: var(--varink);
+  background: var(--varbg);
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.previewChip {
+  color: var(--varink);
+  background: var(--varbg);
+  border-radius: 5px;
+  padding: 1px 7px;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.previewValue {
+  color: var(--ink);
+  font-weight: 600;
+}

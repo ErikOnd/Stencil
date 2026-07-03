@@ -1,0 +1,243 @@
+.editorView {
+  display: flex;
+  height: 100vh;
+}
+
+.editorScroll {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.editorInner {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 22px 40px 90px;
+}
+
+.editorTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  background: linear-gradient(var(--bg), var(--bg) 78%, transparent);
+  padding: 12px 0 16px;
+  z-index: 5;
+  margin: 0 -4px;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--ink2);
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 6px 8px;
+  border-radius: 8px;
+}
+
+.editorActions {
+  display: flex;
+  gap: 9px;
+}
+
+.deletePromptButton {
+  width: 42px;
+  min-width: 42px;
+  height: 40px;
+  padding: 0;
+  background: var(--card);
+  border-color: #e8cabe;
+  color: #a9564a;
+
+  &:hover {
+    background: #fff8f4;
+  }
+}
+
+.editorEyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+
+.plainTitle,
+.plainDesc {
+  width: 100%;
+  border: none;
+  background: transparent;
+  outline: none;
+  padding: 0;
+}
+
+.plainTitle {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.plainDesc {
+  font-size: 14.5px;
+  color: var(--ink2);
+  margin-bottom: 18px;
+}
+
+.tagEditor {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 24px;
+}
+
+.tagInput {
+  border: 1px dashed var(--line2);
+  background: transparent;
+  border-radius: 7px;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: var(--ink);
+  outline: none;
+  width: 80px;
+
+  &:focus {
+    border-color: var(--accent);
+    border-style: solid;
+  }
+}
+
+.removeTag {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--ink3);
+  font-size: 14px;
+  line-height: 0;
+  padding: 0 2px;
+}
+
+.selectionRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.selectionHint {
+  font-size: 13px;
+  color: var(--ink2);
+}
+
+.markButton {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--varbg);
+  color: var(--varink);
+  border: 1px solid #e6cfa3;
+  border-radius: 8px;
+  padding: 7px 13px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.bodyBox {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+  overflow: hidden;
+
+  &:focus-within {
+    border-color: var(--accent);
+  }
+}
+
+.backdrop {
+  margin: 0;
+  padding: 20px 22px;
+  font-family: var(--font-mono), "JetBrains Mono", monospace;
+  font-size: 15px;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--ink);
+  min-height: 360px;
+  box-sizing: border-box;
+}
+
+.bodyTextarea {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 20px 22px;
+  border: none;
+  outline: none;
+  resize: none;
+  background: transparent;
+  color: transparent;
+  caret-color: var(--accent);
+  font-family: var(--font-mono), "JetBrains Mono", monospace;
+  font-size: 15px;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow: hidden;
+}
+
+.editorHelp {
+  font-family: var(--font-mono), "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--ink3);
+  margin-top: 10px;
+
+  span {
+    color: var(--varink);
+    background: var(--varbg);
+    border-radius: 4px;
+    padding: 0 4px;
+  }
+}
+
+@media (max-width: 860px) {
+  .editorView {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .editorInner {
+    padding: 16px 18px 40px;
+  }
+
+  .editorTop {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .editorActions {
+    width: 100%;
+    flex-wrap: wrap;
+
+    button {
+      flex: 1;
+    }
+
+    .deletePromptButton {
+      flex: 0 0 42px;
+    }
+  }
+}

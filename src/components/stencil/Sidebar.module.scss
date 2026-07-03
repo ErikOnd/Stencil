@@ -1,0 +1,336 @@
+.sidebar {
+  width: 246px;
+  flex-shrink: 0;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  padding: 22px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  overflow-y: auto;
+}
+
+.brandRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 2px 6px;
+}
+
+.brandText {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.version {
+  margin-left: auto;
+  font-family: var(--font-mono), "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: var(--ink3);
+}
+
+.newButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(58, 50, 42, 0.12);
+  outline: none;
+  transition: transform 0.14s ease, filter 0.14s ease, box-shadow 0.14s ease;
+
+  &:hover {
+    filter: brightness(0.96);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(176, 123, 71, 0.22);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.72), 0 0 0 2px var(--accent);
+  }
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  text-align: left;
+  padding: 8px 11px;
+  border-radius: 9px;
+  border: none;
+  cursor: pointer;
+  font-size: 13.5px;
+  font-family: inherit;
+  font-weight: 500;
+  background: var(--panel);
+  color: var(--ink2);
+  outline: none;
+  transition: background 0.14s ease, color 0.14s ease, box-shadow 0.14s ease;
+
+  &:hover {
+    background: var(--card);
+    color: var(--ink);
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px var(--accent);
+  }
+}
+
+.navItemActive {
+  font-weight: 600;
+  background: var(--card);
+  color: var(--ink);
+  box-shadow: 0 1px 2px rgba(58, 50, 42, 0.06), inset 0 0 0 1px var(--line);
+
+  &:hover {
+    box-shadow: 0 2px 6px rgba(58, 50, 42, 0.08), inset 0 0 0 1px var(--line2);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px var(--accent);
+  }
+}
+
+.tagsBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.tagTitle {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  padding: 0 8px;
+}
+
+.tagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 4px;
+}
+
+.tagToggle {
+  display: inline-block;
+  padding: 5px 11px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12.5px;
+  font-family: inherit;
+  font-weight: 600;
+  white-space: nowrap;
+  border: 1px dashed var(--line2);
+  background: transparent;
+  color: var(--ink3);
+  outline: none;
+  transition: background 0.14s ease, color 0.14s ease, border-color 0.14s ease;
+
+  &:hover {
+    background: var(--card);
+    border-color: var(--line2);
+    color: var(--ink2);
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: transparent;
+    box-shadow: inset 0 0 0 2px var(--accent);
+  }
+}
+
+.accountWrap {
+  margin-top: auto;
+  position: relative;
+  border-top: 1px solid var(--line);
+  padding-top: 8px;
+}
+
+.accountMenu {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(58, 50, 42, 0.16);
+  padding: 6px;
+  z-index: 20;
+}
+
+.accountHeader {
+  padding: 8px 10px 9px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 4px;
+
+  strong {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  span {
+    display: block;
+    font-family: var(--font-mono), "JetBrains Mono", monospace;
+    font-size: 11px;
+    color: var(--ink3);
+    margin-top: 1px;
+  }
+}
+
+.accountAction {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ink);
+  font-family: inherit;
+
+  &:hover {
+    background: var(--inset);
+  }
+}
+
+.dangerAction {
+  color: #a9564a;
+
+  &:hover {
+    background: #f4e4df;
+  }
+}
+
+.accountButton {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--ink);
+  outline: none;
+  transition: background 0.14s ease, box-shadow 0.14s ease;
+
+  &:hover {
+    background: var(--card);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px var(--accent);
+  }
+}
+
+.accountButtonOpen {
+  background: var(--card);
+}
+
+.avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--inset);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink2);
+  flex-shrink: 0;
+}
+
+.accountText {
+  line-height: 1.2;
+  text-align: left;
+  flex: 1;
+  min-width: 0;
+
+  strong {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  span {
+    display: block;
+    font-size: 11px;
+    color: var(--ink3);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.caret {
+  font-size: 15px;
+  color: var(--ink3);
+  line-height: 0;
+  margin-right: 2px;
+  transition: transform 0.15s;
+}
+
+.caretOpen {
+  transform: rotate(180deg);
+}
+
+@media (max-width: 860px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 272px;
+    z-index: 80;
+    padding: 20px 16px;
+    gap: 20px;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    box-shadow: none;
+  }
+
+  .sidebarOpen {
+    transform: translateX(0);
+    box-shadow: 0 0 48px rgba(58, 50, 42, 0.3);
+  }
+}

@@ -1,0 +1,53 @@
+.deleteIcon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: #f4e0db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  color: #a9564a;
+}
+
+.deleteTitle {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 7px;
+}
+
+.deleteText {
+  margin: 0 0 18px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink2);
+
+  strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+}
+
+.deleteAck {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  cursor: pointer;
+  margin-bottom: 20px;
+
+  span {
+    font-size: 13px;
+    color: var(--ink2);
+    line-height: 1.4;
+  }
+}
+
+.modalActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+
+  button {
+    flex: 1;
+  }
+}

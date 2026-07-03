@@ -1,0 +1,86 @@
+:root {
+  --bg: #f1e8d9;
+  --panel: #fbf6ec;
+  --card: #fefbf4;
+  --inset: #ede3d2;
+  --line: #e5dac7;
+  --line2: #d8cab2;
+  --ink: #3a322a;
+  --ink2: #8b7c67;
+  --ink3: #b0a28d;
+  --accent: #e08043;
+  --accent-d: #c4692e;
+  --accent-soft: #f8e4cf;
+  --varbg: #f5e3c6;
+  --varink: #8a5825;
+  --sage: #6e8a63;
+  --sage-soft: #e5ebdb;
+  --err: #b4574a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  max-width: 100vw;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-sans), "Hanken Grotesk", -apple-system, sans-serif;
+}
+
+::selection {
+  background: rgba(176, 123, 71, 0.24);
+}
+
+textarea::selection {
+  background: rgba(176, 123, 71, 0.3);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--line2);
+  border-radius: 6px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+
+  &:hover {
+    background: var(--ink3);
+    background-clip: content-box;
+  }
+}
+
+input,
+textarea,
+button {
+  font-family: inherit;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--ink3);
+}
+
+button {
+  outline: none;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+}

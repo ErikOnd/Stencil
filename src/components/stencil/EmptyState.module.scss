@@ -1,0 +1,36 @@
+.empty {
+  text-align: center;
+  padding: 70px 20px;
+  border: 1px dashed var(--line2);
+  border-radius: 16px;
+  background: var(--card);
+
+  h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 6px;
+  }
+
+  p {
+    color: var(--ink2);
+    max-width: 340px;
+    margin: 0 auto 20px;
+    font-size: 14px;
+  }
+}
+
+.emptySmall {
+  padding: 60px 20px;
+}
+
+.emptyIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  margin: 0 auto 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

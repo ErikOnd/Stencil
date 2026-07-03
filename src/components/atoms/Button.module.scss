@@ -1,0 +1,82 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.12s, opacity 0.12s, background 0.12s;
+
+  &:hover {
+    filter: brightness(0.94);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.58;
+  }
+}
+
+.primary {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 3px 12px rgba(176, 123, 71, 0.26);
+}
+
+.secondary {
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--line2);
+}
+
+.sage {
+  background: var(--sage-soft);
+  color: #4f6647;
+  border: 1px solid #cdd8c1;
+}
+
+.ghost {
+  background: none;
+  color: var(--ink2);
+  border: none;
+}
+
+.danger {
+  background: #a9564a;
+  color: #fff;
+}
+
+.small {
+  padding: 7px 12px;
+  font-size: 13px;
+  border-radius: 8px;
+}
+
+.medium {
+  padding: 9px 15px;
+}
+
+.large {
+  padding: 13px 18px;
+  font-size: 14.5px;
+  border-radius: 11px;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: currentColor;
+  animation: atomspin 0.7s linear infinite;
+}
+
+@keyframes atomspin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,145 @@
+.root {
+  min-height: 100vh;
+  display: flex;
+  color: var(--ink);
+  background: var(--bg);
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.brand {
+  width: 44%;
+  max-width: 560px;
+  min-width: 400px;
+  flex-shrink: 0;
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  padding: 44px 52px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.orb {
+  position: absolute;
+  top: -120px;
+  right: -120px;
+  width: 340px;
+  height: 340px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  opacity: 0.5;
+  filter: blur(8px);
+}
+
+.brandMark,
+.centerMark {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.brandMark {
+  gap: 11px;
+}
+
+.brandName {
+  font-size: 23px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.brandBody {
+  position: relative;
+  margin-top: auto;
+
+  h1 {
+    margin: 0;
+    font-size: 38px;
+    line-height: 1.12;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+
+  p {
+    margin: 18px 0 0;
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: var(--ink2);
+    max-width: 380px;
+  }
+}
+
+.featureList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 32px;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14.5px;
+  color: var(--ink);
+}
+
+.featureIcon {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: var(--accent-soft);
+  color: var(--accent-d);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.copyright {
+  position: relative;
+  margin-top: auto;
+  padding-top: 40px;
+  font-family: var(--font-mono), "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--ink3);
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  min-height: 100vh;
+}
+
+.formShell {
+  width: 100%;
+  max-width: 412px;
+}
+
+.centerMark {
+  justify-content: flex-start;
+  gap: 0;
+  margin-bottom: 34px;
+}
+
+.centerName {
+  font-size: 56px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+@media (max-width: 860px) {
+  .brand {
+    display: none;
+  }
+
+  .main {
+    padding: 34px 22px;
+  }
+}

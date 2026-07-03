@@ -1,0 +1,30 @@
+.toggle {
+  width: 40px;
+  height: 23px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  background: var(--line2);
+  transition: background 0.15s;
+}
+
+.toggleOn {
+  background: var(--accent);
+}
+
+.toggleKnob {
+  position: absolute;
+  top: 2.5px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  transition: left 0.15s;
+}
+
+.toggleOn .toggleKnob {
+  left: 20px;
+}

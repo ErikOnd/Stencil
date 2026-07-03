@@ -1,0 +1,71 @@
+.searchWrap {
+  position: relative;
+  width: 290px;
+  max-width: 100%;
+
+  &:hover {
+    .searchIcon {
+      color: var(--ink2);
+    }
+
+    .searchInput {
+      border-color: var(--line2);
+      box-shadow: 0 2px 8px rgba(58, 50, 42, 0.05);
+    }
+  }
+
+  &:focus-within {
+    .searchIcon {
+      color: var(--accent);
+    }
+
+    .searchInput {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    .kbd {
+      border-color: rgba(224, 128, 67, 0.36);
+      color: var(--accent-d);
+      background: var(--accent-soft);
+    }
+  }
+}
+
+.searchIcon {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ink3);
+  display: flex;
+  pointer-events: none;
+  transition: color 0.14s ease;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px 44px 10px 38px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
+  font-size: 14px;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.14s ease, box-shadow 0.14s ease, background 0.14s ease;
+}
+
+.kbd {
+  position: absolute;
+  right: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono), "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--ink3);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 2px 5px;
+  background: var(--panel);
+  transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease;
+}
