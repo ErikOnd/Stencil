@@ -30,6 +30,12 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
+  const hasSupabaseAuthCookie = request.cookies.getAll().some(({ name }) => isSupabaseAuthCookieName(name));
+
+  if (!hasSupabaseAuthCookie) {
+    return response;
+  }
+
   const supabase = createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
