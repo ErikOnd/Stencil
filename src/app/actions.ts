@@ -1,6 +1,7 @@
 "use server";
 
 import { createAdminClient } from "@/lib/supabase/admin";
+import { isRecoverableAuthSessionError } from "@/lib/supabase/auth-errors";
 import { createClient } from "@/lib/supabase/server";
 import { savePrompt } from "@/lib/stencil/data";
 import type { PromptDraft } from "@/lib/stencil/types";
@@ -8,7 +9,8 @@ import type { PromptDraft } from "@/lib/stencil/types";
 async function requireUser() {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.getUser();
-  if (error || !data.user) throw new Error("You must be signed in.");
+  if (error && !isRecoverableAuthSessionError(error)) throw error;
+  if (!data.user) throw new Error("You must be signed in.");
   return { supabase, user: data.user };
 }
 
@@ -53,8 +55,9 @@ export async function touchPromptAction(id: string) {
 }
 
 export async function signOutAction() {
-  const { supabase } = await requireUser();
-  await supabase.auth.signOut();
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signOut({ scope: "local" });
+  if (error && !isRecoverableAuthSessionError(error)) throw error;
 }
 
 export async function deleteAccountAction() {

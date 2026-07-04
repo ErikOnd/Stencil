@@ -1,6 +1,23 @@
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
+import { isRecoverableAuthSessionError, isSupabaseAuthCookieName } from "@/lib/supabase/auth-errors";
 import type { Database } from "@/lib/supabase/database.types";
+
+function clearSupabaseAuthCookies(request: NextRequest, response: NextResponse) {
+  request.cookies
+    .getAll()
+    .filter(({ name }) => isSupabaseAuthCookieName(name))
+    .forEach(({ name }) => {
+      request.cookies.delete(name);
+      response.cookies.set(name, "", {
+        httpOnly: true,
+        maxAge: 0,
+        path: "/",
+        sameSite: "lax",
+        secure: request.nextUrl.protocol === "https:",
+      });
+    });
+}
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next({
@@ -32,7 +49,14 @@ export async function middleware(request: NextRequest) {
     },
   );
 
-  await supabase.auth.getUser();
+  const { error } = await supabase.auth.getUser();
+
+  if (isRecoverableAuthSessionError(error)) {
+    const cleanResponse = request.method === "GET" ? NextResponse.redirect(request.nextUrl) : response;
+    clearSupabaseAuthCookies(request, cleanResponse);
+    return cleanResponse;
+  }
+
   return response;
 }
 

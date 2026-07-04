@@ -1,5 +1,6 @@
 import { AuthPage } from "@/components/auth/AuthPage";
 import { StencilApp } from "@/components/stencil/StencilApp";
+import { isRecoverableAuthSessionError } from "@/lib/supabase/auth-errors";
 import { createClient } from "@/lib/supabase/server";
 import { ensureProfile, loadPrompts } from "@/lib/stencil/data";
 import packageJson from "../../package.json";
@@ -45,7 +46,15 @@ export default async function Home({
   }
 
   const supabase = await createClient();
-  const { data } = await supabase.auth.getUser();
+  const { data, error } = await supabase.auth.getUser();
+
+  if (error) {
+    if (isRecoverableAuthSessionError(error)) {
+      return <AuthPage layout={layout} defaultMode={defaultMode} />;
+    }
+
+    throw error;
+  }
 
   if (!data.user) {
     return <AuthPage layout={layout} defaultMode={defaultMode} />;
