@@ -3,7 +3,6 @@ import { StencilApp } from "@/components/stencil/StencilApp";
 import { ensureProfile, loadPrompts } from "@/lib/stencil/data";
 import { isRecoverableAuthSessionError } from "@/lib/supabase/auth-errors";
 import { createClient } from "@/lib/supabase/server";
-import packageJson from "../../package.json";
 
 export const dynamic = "force-dynamic";
 
@@ -67,7 +66,6 @@ export default async function Home({
 			initialPrompts={prompts}
 			email={data.user.email ?? ""}
 			userName={displayNameFromUser(data.user)}
-			appVersion={packageJson.version}
 		/>
 	);
 }

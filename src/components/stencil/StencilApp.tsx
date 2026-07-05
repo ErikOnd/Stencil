@@ -54,12 +54,10 @@ export function StencilApp({
 	initialPrompts,
 	email,
 	userName,
-	appVersion,
 }: {
 	initialPrompts: PromptRecord[];
 	email: string;
 	userName: string;
-	appVersion: string;
 }) {
 	const router = useRouter();
 	const searchRef = useRef<HTMLInputElement>(null);
@@ -532,9 +530,17 @@ export function StencilApp({
 		setAIRunning(true);
 		setAIError("");
 		try {
+			const failAI = (message: string) => {
+				setAIOriginal(body);
+				setAIResult(null);
+				setAIError(message);
+				setAIStatus("error");
+			};
+
 			const promptId = await ensurePromptSavedForAI();
 			if (!promptId) {
-				throw new Error("Could not auto-save this prompt before improving it.");
+				failAI("Could not auto-save this prompt before improving it.");
+				return;
 			}
 
 			const sourcePrompt = prompts.find((prompt) => prompt.id === promptId);
@@ -558,11 +564,13 @@ export function StencilApp({
 			const payload = (await response.json()) as Partial<ImproveResult> & { error?: string };
 
 			if (!response.ok) {
-				throw new Error(payload.error || "AI improvements failed.");
+				failAI(payload.error || "AI improvements failed.");
+				return;
 			}
 
 			if (typeof payload.improved !== "string") {
-				throw new Error("AI improvements returned an invalid response.");
+				failAI("AI improvements returned an invalid response.");
+				return;
 			}
 
 			const result: ImproveResult = {
@@ -633,7 +641,6 @@ export function StencilApp({
 				mobileOpen={menuOpen}
 				email={email}
 				userName={userName}
-				appVersion={appVersion}
 				onNew={newPrompt}
 				onTag={(tag) => {
 					setActiveTag(tag);

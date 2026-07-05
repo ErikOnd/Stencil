@@ -14,6 +14,7 @@
   flex-direction: column;
   gap: var(--space-xl);
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .brandRow {
@@ -27,13 +28,6 @@
   font-size: var(--text-2xl);
   font-weight: 700;
   letter-spacing: -0.01em;
-}
-
-.version {
-  margin-left: auto;
-  font-family: var(--font-mono-stack), monospace;
-  font-size: var(--text-2xs);
-  color: var(--ink3);
 }
 
 .newButton {
@@ -177,6 +171,8 @@
   bottom: calc(100% + var(--space-xs));
   left: 0;
   right: 0;
+  min-width: 0;
+  overflow: hidden;
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
@@ -186,6 +182,7 @@
 }
 
 .accountHeader {
+  min-width: 0;
   padding: var(--space-sm) var(--space-sm) var(--space-sm);
   border-bottom: 1px solid var(--line);
   margin-bottom: var(--space-2xs);
@@ -198,6 +195,7 @@
   }
 
   span {
+    @include ellipsis;
     display: block;
     font-family: var(--font-mono-stack), monospace;
     @include text-xsmall;
@@ -246,6 +244,7 @@
   align-items: center;
   gap: var(--space-sm);
   width: 100%;
+  min-width: 0;
   padding: var(--space-sm);
   background: transparent;
   border: none;
@@ -289,6 +288,7 @@
   min-width: 0;
 
   strong {
+    @include ellipsis;
     display: block;
     @include text-small;
     font-weight: 600;
@@ -307,6 +307,7 @@
   color: var(--ink3);
   line-height: 0;
   margin-right: var(--space-3xs);
+  flex-shrink: 0;
   transition: transform 0.15s;
 }
 

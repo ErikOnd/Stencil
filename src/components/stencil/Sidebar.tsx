@@ -16,7 +16,6 @@ type SidebarProps = {
 	mobileOpen: boolean;
 	email: string;
 	userName: string;
-	appVersion: string;
 	onNew: () => void;
 	onTag: (tag: string) => void;
 	onToggleTags: () => void;
@@ -35,7 +34,6 @@ export function Sidebar({
 	mobileOpen,
 	email,
 	userName,
-	appVersion,
 	onNew,
 	onTag,
 	onToggleTags,
@@ -64,9 +62,8 @@ export function Sidebar({
 	return (
 		<aside className={clsx(styles.sidebar, mobileOpen && styles.sidebarOpen)}>
 			<div className={styles.brandRow}>
-				<Image src="/assets/stencil-logo.png" alt="Stencil" width={28} height={28} />
+				<Image src="/assets/stencil-logo-transparent.png?v=3" alt="Stencil" width={28} height={28} unoptimized />
 				<div className={styles.brandText}>Stencil</div>
-				<div className={styles.version}>v{appVersion}</div>
 			</div>
 
 			<button className={styles.newButton} onClick={onNew} type="button">

@@ -16,7 +16,14 @@ export function AuthLayout({
 					<aside className={styles.brand}>
 						<div className={styles.orb} />
 						<div className={styles.brandMark}>
-							<Image src="/assets/stencil-logo-transparent.png" alt="Stencil" width={38} height={38} priority />
+							<Image
+								src="/assets/stencil-logo-transparent.png?v=3"
+								alt="Stencil"
+								width={38}
+								height={38}
+								priority
+								unoptimized
+							/>
 							<div className={styles.brandName}>Stencil</div>
 						</div>
 
@@ -58,7 +65,14 @@ export function AuthLayout({
 					{layout === "Centered"
 						? (
 							<div className={styles.centerMark}>
-								<Image src="/assets/stencil-logo-transparent.png" alt="Stencil" width={62} height={62} priority />
+								<Image
+									src="/assets/stencil-logo-transparent.png?v=3"
+									alt="Stencil"
+									width={62}
+									height={62}
+									priority
+									unoptimized
+								/>
 								<div className={styles.centerName}>Stencil</div>
 							</div>
 						)

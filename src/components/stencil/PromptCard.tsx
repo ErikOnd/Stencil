@@ -20,6 +20,7 @@ export function PromptCard({
 }) {
 	const preview = prompt.description.trim() || prompt.body.replace(/\{\{\s*([^}]+?)\s*}}/g, "$1").trim();
 	const copiesImmediately = prompt.variables.length === 0;
+	const hasVariables = prompt.variables.length > 0;
 
 	return (
 		<div className={styles.promptCard}>
@@ -42,11 +43,17 @@ export function PromptCard({
 				{prompt.tags.map((tag) => <Tag key={tag}>{tag}</Tag>)}
 			</div>
 			<div className={styles.cardMeta}>
-				<span>
-					<span className={styles.metaGlyph}>{"{ }"}</span>
-					{prompt.variables.length} {prompt.variables.length === 1 ? "variable" : "variables"}
-				</span>
-				<span>·</span>
+				{hasVariables
+					? (
+						<>
+							<span>
+								<span className={styles.metaGlyph}>{"{ }"}</span>
+								{prompt.variables.length} {prompt.variables.length === 1 ? "variable" : "variables"}
+							</span>
+							<span>·</span>
+						</>
+					)
+					: null}
 				<span>
 					<Icon name="clock" size={12} className={styles.metaIcon} />
 					{displayLastUsed(prompt)}

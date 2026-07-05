@@ -15,7 +15,7 @@ export function SessionOverlay({
 		<div className={styles.sessionOverlay}>
 			<div className={styles.sessionCard}>
 				<div className={styles.sessionBrand}>
-					<Image src="/assets/stencil-logo-transparent.png" alt="Stencil" width={28} height={28} />
+					<Image src="/assets/stencil-logo-transparent.png?v=3" alt="Stencil" width={28} height={28} unoptimized />
 					<span>Stencil</span>
 				</div>
 				<div className={styles.sessionIcon}>

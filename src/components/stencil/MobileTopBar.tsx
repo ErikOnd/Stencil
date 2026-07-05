@@ -11,7 +11,7 @@ export function MobileTopBar({ onMenu, onNew }: { onMenu: () => void; onNew: () 
 				<Icon name="menu" size={20} />
 			</IconButton>
 			<div className={styles.mobileBrand}>
-				<Image src="/assets/stencil-logo.png" alt="Stencil" width={24} height={24} />
+				<Image src="/assets/stencil-logo-transparent.png?v=3" alt="Stencil" width={24} height={24} unoptimized />
 				<span>Stencil</span>
 			</div>
 			<IconButton className={styles.mobileNew} aria-label="New prompt" onClick={onNew}>
