@@ -28,6 +28,7 @@ export function AuthForm({ defaultMode = "signin" }: { defaultMode?: Mode }) {
 	const [social, setSocial] = useState<"google" | "apple" | null>(null);
 	const [touched, setTouched] = useState(false);
 	const [lastProvider, setLastProvider] = useState<"google" | "apple" | null>(null);
+	const [pendingVerificationEmail, setPendingVerificationEmail] = useState("");
 	const [serverError, setServerError] = useState("");
 
 	const isRegister = mode === "register";
@@ -53,6 +54,14 @@ export function AuthForm({ defaultMode = "signin" }: { defaultMode?: Mode }) {
 			return;
 		}
 
+		if (isRegister && !result.data.session) {
+			setPendingVerificationEmail(email.trim());
+			setStage("success");
+			setLastProvider(null);
+			return;
+		}
+
+		setPendingVerificationEmail("");
 		setStage("success");
 		setLastProvider(null);
 		window.setTimeout(() => router.refresh(), 900);
@@ -75,6 +84,7 @@ export function AuthForm({ defaultMode = "signin" }: { defaultMode?: Mode }) {
 		}
 
 		setStage("success");
+		setPendingVerificationEmail("");
 		window.setTimeout(() => router.refresh(), 900);
 	}, [router, social, supabase]);
 
@@ -105,13 +115,22 @@ export function AuthForm({ defaultMode = "signin" }: { defaultMode?: Mode }) {
 		setPassword("");
 		setShowPw(false);
 		setServerError("");
+		setPendingVerificationEmail("");
 	}
 
 	if (stage === "success") {
 		return (
 			<AuthSuccess
-				title={lastProvider ? "You’re in" : isRegister ? "Account created" : "Welcome back"}
-				subtitle={lastProvider
+				title={pendingVerificationEmail
+					? "Verify your email"
+					: lastProvider
+					? "You’re in"
+					: isRegister
+					? "Account created"
+					: "Welcome back"}
+				subtitle={pendingVerificationEmail
+					? `We sent a verification link to ${pendingVerificationEmail}. Open it to finish creating your account.`
+					: lastProvider
 					? `Signed in with ${lastProvider === "google" ? "Google" : "Apple"}. Taking you to your library…`
 					: isRegister
 					? "Your prompt library is ready. Taking you in…"
@@ -125,6 +144,7 @@ export function AuthForm({ defaultMode = "signin" }: { defaultMode?: Mode }) {
 					setTouched(false);
 					setSocial(null);
 					setLastProvider(null);
+					setPendingVerificationEmail("");
 				}}
 			/>
 		);
