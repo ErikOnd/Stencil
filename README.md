@@ -26,14 +26,18 @@ The schema uses related tables:
 
 All tables have RLS enabled. Prompt variables are protected through their owning prompt. New profiles start with an empty library; prompts are loaded only from saved database rows.
 
-OAuth providers are configured in the Supabase dashboard under Authentication > Providers. Add Google and Apple credentials there, then add this callback URL:
+OAuth providers are configured in the Supabase dashboard under Authentication > Providers. Add Google and Apple credentials there.
+
+App redirects are configured in Authentication > URL Configuration. Add this local Redirect URL:
 
 ```text
 http://localhost:3000/auth/callback
 ```
 
-For production, add the production callback URL as well:
+For production, add the production Redirect URL as well:
 
 ```text
-https://your-domain.example/auth/callback
+https://stencilprompt.com/auth/callback
 ```
+
+The Site URL can stay set to the production domain. Local OAuth still works as long as the local callback URL is in the Redirect URLs list.

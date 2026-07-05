@@ -34,7 +34,7 @@ export function AuthLayout({
                 <span className={styles.featureIcon}>
                   <Icon name="sparkle" size={15} />
                 </span>
-                AI suggestions to sharpen any prompt
+                AI improvements for saved prompts
               </div>
               <div className={styles.feature}>
                 <span className={styles.featureIcon}>

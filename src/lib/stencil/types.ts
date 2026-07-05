@@ -33,7 +33,5 @@ export type PromptDraft = {
 
 export type ImproveResult = {
   improved: string;
-  explanation: string[];
-  suggestions: string[];
   aiImprovedAt?: string;
 };

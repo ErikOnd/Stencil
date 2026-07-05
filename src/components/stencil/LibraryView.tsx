@@ -1,6 +1,7 @@
 "use client";
 
-import type { PromptRecord } from "@/lib/stencil/types";
+import { starterPromptExamples } from "@/lib/stencil/examples";
+import type { PromptDraft, PromptRecord } from "@/lib/stencil/types";
 import { sortRecentlyUsed } from "@/lib/stencil/utils";
 import type { RefObject } from "react";
 import { EmptyState } from "./EmptyState";
@@ -16,9 +17,11 @@ export function LibraryView({
   libFilter,
   isMobile,
   searchRef,
+  copiedPromptId,
   onSearch,
   onNew,
   onClear,
+  onExample,
   onFavorite,
   onUse,
   onEdit,
@@ -29,11 +32,13 @@ export function LibraryView({
   libFilter: "all" | "favorites" | "recent";
   isMobile: boolean;
   searchRef: RefObject<HTMLInputElement | null>;
+  copiedPromptId: string | null;
   onSearch: (value: string) => void;
   onNew: () => void;
   onClear: () => void;
+  onExample: (draft: PromptDraft) => void;
   onFavorite: (id: string) => void;
-  onUse: (id: string) => void;
+  onUse: (id: string) => void | Promise<void>;
   onEdit: (id: string) => void;
 }) {
   const q = search.trim().toLowerCase();
@@ -42,7 +47,7 @@ export function LibraryView({
   else if (libFilter === "recent") list = sortRecentlyUsed(list).filter((prompt) => prompt.lastUsedAt);
   if (activeTag !== "All") list = list.filter((prompt) => prompt.tags.includes(activeTag));
   if (q) {
-    list = list.filter((prompt) => `${prompt.title} ${prompt.description} ${prompt.tags.join(" ")}`.toLowerCase().includes(q));
+    list = list.filter((prompt) => `${prompt.title} ${prompt.description} ${prompt.body} ${prompt.tags.join(" ")}`.toLowerCase().includes(q));
   }
 
   const sectionTitle = q
@@ -73,13 +78,13 @@ export function LibraryView({
         <span>{list.length} {list.length === 1 ? "prompt" : "prompts"}</span>
       </div>
 
-      {emptyKind === "none" ? <EmptyState kind="none" onNew={onNew} /> : null}
+      {emptyKind === "none" ? <EmptyState kind="none" examples={starterPromptExamples} onExample={onExample} onNew={onNew} /> : null}
       {emptyKind === "noresults" ? <EmptyState kind="noresults" search={search.trim()} onClear={onClear} /> : null}
       {emptyKind === "nofilter" ? <EmptyState kind="nofilter" onClear={onClear} /> : null}
 
       <div className={styles.grid}>
         {list.map((prompt) => (
-          <PromptCard key={prompt.id} prompt={prompt} onFavorite={onFavorite} onUse={onUse} onEdit={onEdit} />
+          <PromptCard key={prompt.id} prompt={prompt} copied={copiedPromptId === prompt.id} onFavorite={onFavorite} onUse={onUse} onEdit={onEdit} />
         ))}
       </div>
     </div>

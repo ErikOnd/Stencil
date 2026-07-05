@@ -83,7 +83,11 @@ export async function ensureProfile(supabase: Client, user: { id: string; email?
 }
 
 export async function savePrompt(supabase: Client, userId: string, draft: PromptDraft, id?: string | null) {
-  const title = draft.title.trim() || "Untitled prompt";
+  const title = draft.title.trim();
+  if (!title) {
+    throw new Error("Please give the prompt a title before saving or improving the prompt.");
+  }
+
   const row = {
     user_id: userId,
     title,

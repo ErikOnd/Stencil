@@ -39,12 +39,6 @@ type LibFilter = "all" | "favorites" | "recent";
 type SessionState = "active" | "out" | "deleted";
 type AIContext = "editor" | "use";
 
-type AISuggestion = {
-  id: number;
-  text: string;
-  checked: boolean;
-};
-
 const emptyModal: VariableModalState = {
   editingIndex: null,
   name: "",
@@ -82,6 +76,7 @@ export function StencilApp({
   const [prompts, setPrompts] = useState(initialPrompts);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [draft, setDraftState] = useState<PromptDraft>(blankDraft());
+  const [titleError, setTitleError] = useState("");
   const [selStart, setSelStart] = useState(0);
   const [selEnd, setSelEnd] = useState(0);
   const [showVarModal, setShowVarModal] = useState(false);
@@ -94,13 +89,13 @@ export function StencilApp({
   const [aiError, setAIError] = useState("");
   const [aiOriginal, setAIOriginal] = useState("");
   const [aiResult, setAIResult] = useState<ImproveResult | null>(null);
-  const [aiSuggestions, setAISuggestions] = useState<AISuggestion[]>([]);
   const [aiRunning, setAIRunning] = useState(false);
   const [useTarget, setUseTarget] = useState<PromptDraft | null>(null);
   const [useSourceId, setUseSourceId] = useState<string | null>(null);
   const [useOrigin, setUseOrigin] = useState<"library" | "editor">("library");
   const [values, setValues] = useState<Record<string, string>>({});
   const [copied, setCopied] = useState(false);
+  const [copiedPromptId, setCopiedPromptId] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -153,10 +148,12 @@ export function StencilApp({
   function goLibrary() {
     setView("library");
     setShowAIPanel(false);
+    setTitleError("");
   }
 
   function openEditor(nextDraft: PromptDraft, id: string | null) {
     setShowAIPanel(false);
+    setTitleError("");
     setTagInput("");
     setSelStart(0);
     setSelEnd(0);
@@ -168,6 +165,10 @@ export function StencilApp({
 
   function newPrompt() {
     openEditor(blankDraft(), null);
+  }
+
+  function newExamplePrompt(example: PromptDraft) {
+    openEditor(cloneDraft(example), null);
   }
 
   function editPrompt(id: string) {
@@ -187,13 +188,25 @@ export function StencilApp({
     setMenuOpen(false);
   }
 
-  function usePrompt(id: string) {
+  async function usePrompt(id: string) {
     const prompt = prompts.find((item) => item.id === id);
-    if (prompt) enterUse(prompt, id, "library");
-  }
+    if (!prompt) return;
 
-  function previewDraft() {
-    enterUse(draft, editingId, "editor");
+    if (prompt.variables.length > 0) {
+      enterUse(prompt, id, "library");
+      return;
+    }
+
+    await copyText(prompt.body);
+    setCopiedPromptId(id);
+    window.setTimeout(() => setCopiedPromptId((current) => (current === id ? null : current)), 1800);
+
+    try {
+      const lastUsedAt = await touchPromptAction(id);
+      setPrompts((current) => current.map((item) => item.id === id ? { ...item, lastUsedAt } : item));
+    } catch {
+      return;
+    }
   }
 
   function backFromUse() {
@@ -202,6 +215,7 @@ export function StencilApp({
   }
 
   function setDraft(patch: Partial<PromptDraft>) {
+    if (typeof patch.title === "string" && patch.title.trim()) setTitleError("");
     setDraftState((current) => {
       const next = { ...current, ...patch };
       if (typeof patch.body === "string") next.variables = syncVars(patch.body, current.variables);
@@ -209,10 +223,37 @@ export function StencilApp({
     });
   }
 
+  function requirePromptTitle(target: PromptDraft) {
+    if (target.title.trim()) return true;
+    setTitleError("Please give the prompt a title before saving or improving the prompt.");
+    setShowAIPanel(false);
+    return false;
+  }
+
+  function parseTagInput() {
+    return tagInput
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+  }
+
+  function draftWithPendingTags(source: PromptDraft) {
+    const nextTags = parseTagInput();
+    if (!nextTags.length) return source;
+
+    const existing = new Set(source.tags.map((tag) => tag.toLowerCase()));
+    const tagsToAdd = nextTags.filter((tag) => {
+      const key = tag.toLowerCase();
+      if (existing.has(key)) return false;
+      existing.add(key);
+      return true;
+    });
+
+    return tagsToAdd.length ? { ...source, tags: [...source.tags, ...tagsToAdd] } : source;
+  }
+
   function addTag() {
-    const tag = tagInput.trim();
-    if (!tag) return;
-    setDraftState((current) => current.tags.includes(tag) ? current : { ...current, tags: [...current.tags, tag] });
+    setDraftState((current) => draftWithPendingTags(current));
     setTagInput("");
   }
 
@@ -307,10 +348,15 @@ export function StencilApp({
   }
 
   async function saveCurrentPrompt() {
+    const draftToSave = draftWithPendingTags(draft);
+    if (!requirePromptTitle(draftToSave)) return;
+
     setSaving(true);
     try {
-      const saved = await savePromptAction(draft, editingId);
-      setPrompts((current) => [saved, ...current.filter((prompt) => prompt.id !== saved.id)]);
+      setDraftState(draftToSave);
+      setTagInput("");
+      const saved = await savePromptAction(draftToSave, editingId);
+      rememberSavedPrompt(saved);
       setView("library");
       setLibFilter("all");
       setActiveTag("All");
@@ -318,6 +364,10 @@ export function StencilApp({
     } finally {
       setSaving(false);
     }
+  }
+
+  function rememberSavedPrompt(saved: PromptRecord) {
+    setPrompts((current) => [saved, ...current.filter((prompt) => prompt.id !== saved.id)]);
   }
 
   async function toggleFavorite(id: string) {
@@ -374,16 +424,7 @@ export function StencilApp({
   async function copyFinal() {
     if (!useTarget) return;
     const text = finalText(useTarget.body, values);
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch {
-      const textarea = document.createElement("textarea");
-      textarea.value = text;
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand("copy");
-      document.body.removeChild(textarea);
-    }
+    await copyText(text);
 
     setCopied(true);
     window.setTimeout(() => setCopied(false), 1800);
@@ -395,6 +436,19 @@ export function StencilApp({
       } catch {
         return;
       }
+    }
+  }
+
+  async function copyText(text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
     }
   }
 
@@ -415,6 +469,12 @@ export function StencilApp({
   }
 
   function openAI(context: AIContext) {
+    if (context === "editor" && !requirePromptTitle(draft)) return;
+    if (context === "use" && useOrigin === "editor" && useTarget && !requirePromptTitle(useTarget)) {
+      setView("editor");
+      return;
+    }
+
     setShowAIPanel(true);
     setAIContext(context);
     setAISourceId(context === "use" ? useSourceId : editingId);
@@ -422,28 +482,43 @@ export function StencilApp({
     setAIError("");
     setAIOriginal("");
     setAIResult(null);
-    setAISuggestions([]);
+  }
+
+  async function ensurePromptSavedForAI() {
+    if (aiContext === "editor") {
+      const draftToSave = draftWithPendingTags(draft);
+      if (!requirePromptTitle(draftToSave)) return null;
+      setDraftState(draftToSave);
+      setTagInput("");
+      const saved = await savePromptAction(draftToSave, editingId);
+      rememberSavedPrompt(saved);
+      setEditingId(saved.id);
+      setAISourceId(saved.id);
+      setDraftState(cloneDraft(saved));
+      return saved.id;
+    }
+
+    if (aiContext === "use" && useTarget && useOrigin === "editor") {
+      if (!requirePromptTitle(useTarget)) return null;
+      const saved = await savePromptAction(useTarget, useSourceId ?? editingId);
+      rememberSavedPrompt(saved);
+      setEditingId(saved.id);
+      setUseSourceId(saved.id);
+      setAISourceId(saved.id);
+      return saved.id;
+    }
+
+    if (aiSourceId) return aiSourceId;
+
+    return null;
   }
 
   async function runImprove() {
     const body = activeBody();
-    const promptId = aiSourceId;
-
-    if (!promptId) {
+    if (!body.trim()) {
       setAIOriginal(body);
       setAIResult(null);
-      setAISuggestions([]);
-      setAIError("Save this prompt before using AI improvements.");
-      setAIStatus("error");
-      return;
-    }
-
-    const sourcePrompt = prompts.find((prompt) => prompt.id === promptId);
-    if (sourcePrompt?.aiImprovedAt) {
-      setAIOriginal(body);
-      setAIResult(null);
-      setAISuggestions([]);
-      setAIError("This prompt has already been improved with AI.");
+      setAIError("Add prompt text before asking for improvements.");
       setAIStatus("error");
       return;
     }
@@ -451,6 +526,20 @@ export function StencilApp({
     setAIRunning(true);
     setAIError("");
     try {
+      const promptId = await ensurePromptSavedForAI();
+      if (!promptId) {
+        throw new Error("Could not auto-save this prompt before improving it.");
+      }
+
+      const sourcePrompt = prompts.find((prompt) => prompt.id === promptId);
+      if (sourcePrompt?.aiImprovedAt) {
+        setAIOriginal(body);
+        setAIResult(null);
+        setAIError("This prompt has already been improved with AI.");
+        setAIStatus("error");
+        return;
+      }
+
       const response = await fetch("/api/improve", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -472,8 +561,6 @@ export function StencilApp({
 
       const result: ImproveResult = {
         improved: payload.improved,
-        explanation: Array.isArray(payload.explanation) ? payload.explanation.map(String) : [],
-        suggestions: Array.isArray(payload.suggestions) ? payload.suggestions.map(String) : [],
         aiImprovedAt: typeof payload.aiImprovedAt === "string" ? payload.aiImprovedAt : undefined,
       };
       if (result.aiImprovedAt) {
@@ -481,12 +568,10 @@ export function StencilApp({
       }
       setAIOriginal(body);
       setAIResult(result);
-      setAISuggestions(result.suggestions.map((text, index) => ({ id: index, text, checked: false })));
       setAIStatus("done");
     } catch (error) {
       setAIOriginal(body);
       setAIResult(null);
-      setAISuggestions([]);
       setAIError(error instanceof Error ? error.message : "AI improvements failed.");
       setAIStatus("error");
     } finally {
@@ -496,15 +581,6 @@ export function StencilApp({
 
   function applyImproved() {
     if (aiResult) setActiveBody(aiResult.improved);
-    setShowAIPanel(false);
-  }
-
-  function applySelected() {
-    let body = activeBody();
-    aiSuggestions.filter((suggestion) => suggestion.checked).forEach((suggestion) => {
-      if (!body.includes(suggestion.text)) body += `\n- ${suggestion.text}`;
-    });
-    setActiveBody(body);
     setShowAIPanel(false);
   }
 
@@ -580,6 +656,7 @@ export function StencilApp({
             libFilter={libFilter}
             isMobile={isMobile}
             searchRef={searchRef}
+            copiedPromptId={copiedPromptId}
             onSearch={setSearch}
             onNew={newPrompt}
             onClear={() => {
@@ -587,6 +664,7 @@ export function StencilApp({
               setActiveTag("All");
               setLibFilter("all");
             }}
+            onExample={newExamplePrompt}
             onFavorite={toggleFavorite}
             onUse={usePrompt}
             onEdit={editPrompt}
@@ -601,19 +679,21 @@ export function StencilApp({
             hasSelection={hasSelection}
             saving={saving}
             deleting={deletingPrompt && promptToDelete?.id === editingId}
+            titleError={titleError}
+            canImprove={!editingId || !prompts.find((prompt) => prompt.id === editingId)?.aiImprovedAt}
             onDraft={setDraft}
             onBodySelect={handleBodySelection}
             onTagInput={setTagInput}
             onTagKey={(event) => {
-              if (event.key === "Enter") {
+              if (event.key === "Enter" || event.key === ",") {
                 event.preventDefault();
                 addTag();
               }
             }}
+            onTagCommit={addTag}
             onRemoveTag={removeTag}
             onMark={markSelection}
             onBack={goLibrary}
-            onPreview={previewDraft}
             onAI={() => openAI("editor")}
             onSave={saveCurrentPrompt}
             onDelete={() => editingId && requestPromptDelete(editingId)}
@@ -653,13 +733,10 @@ export function StencilApp({
           error={aiError}
           original={aiOriginal}
           result={aiResult}
-          suggestions={aiSuggestions}
           running={aiRunning}
           onClose={() => setShowAIPanel(false)}
           onRun={runImprove}
-          onToggleSuggestion={(id) => setAISuggestions((current) => current.map((item) => item.id === id ? { ...item, checked: !item.checked } : item))}
           onApplyImproved={applyImproved}
-          onApplySelected={applySelected}
           onKeepOriginal={() => setShowAIPanel(false)}
         />
       ) : null}

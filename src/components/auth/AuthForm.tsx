@@ -62,10 +62,10 @@ export function AuthForm({ defaultMode = "signin" }: { defaultMode?: Mode }) {
     if (social) return;
     setSocial(provider);
     setLastProvider(provider);
-    const origin = window.location.origin;
+    const callbackUrl = new URL("/auth/callback", window.location.origin);
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
-      options: { redirectTo: `${origin}/auth/callback?next=/?auth=success` },
+      options: { redirectTo: callbackUrl.toString() },
     });
     if (error) {
       setSocial(null);

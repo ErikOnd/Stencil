@@ -81,10 +81,19 @@
   }
 }
 
-.useCardButton {
+.useCardButton,
+.copiedCardButton {
   background: var(--accent);
   color: #fff;
   border: none;
+}
+
+.copiedCardButton {
+  background: var(--sage);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
 }
 
 .editCardButton {

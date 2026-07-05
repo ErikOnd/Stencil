@@ -2,15 +2,8 @@
 
 import { Button, Icon } from "@/components/atoms";
 import type { ImproveResult } from "@/lib/stencil/types";
-import clsx from "clsx";
 import { TokenText } from "./TokenText";
 import styles from "./AIPanel.module.scss";
-
-type Suggestion = {
-  id: number;
-  text: string;
-  checked: boolean;
-};
 
 export function AIPanel({
   contextLabel,
@@ -18,13 +11,10 @@ export function AIPanel({
   error,
   original,
   result,
-  suggestions,
   running,
   onClose,
   onRun,
-  onToggleSuggestion,
   onApplyImproved,
-  onApplySelected,
   onKeepOriginal,
 }: {
   contextLabel: string;
@@ -32,22 +22,20 @@ export function AIPanel({
   error: string;
   original: string;
   result: ImproveResult | null;
-  suggestions: Suggestion[];
   running: boolean;
   onClose: () => void;
   onRun: () => void;
-  onToggleSuggestion: (id: number) => void;
   onApplyImproved: () => void;
-  onApplySelected: () => void;
   onKeepOriginal: () => void;
 }) {
-  const anySelected = suggestions.some((suggestion) => suggestion.checked);
   const errorTitle = error.includes("already been improved")
     ? "Prompt already improved"
-    : error.includes("Save this prompt")
-      ? "Save prompt first"
+    : error.includes("Add prompt text")
+      ? "Add prompt text"
+      : error.includes("auto-save") || error.includes("Save this prompt")
+        ? "Could not save prompt"
       : "AI is not available";
-  const canRetryError = !error.includes("already been improved") && !error.includes("Save this prompt");
+  const canRetryError = !error.includes("already been improved") && !error.includes("Add prompt text");
 
   return (
     <div className={styles.aiOverlay}>
@@ -69,7 +57,7 @@ export function AIPanel({
             <div className={styles.aiIdleIcon}>
               <Icon name="sparkle" size={26} />
             </div>
-            <strong>No suggestions yet</strong>
+            <strong>No improved version yet</strong>
             <p>The assistant will read your prompt and suggest a clearer, more reliable version — you decide what to keep.</p>
             <Button variant="danger" className={styles.sageRunButton} disabled={running} loading={running} onClick={onRun} style={{ background: "var(--sage)", boxShadow: "0 3px 12px rgba(110,138,99,.28)" }}>
               Suggest improvements
@@ -104,39 +92,11 @@ export function AIPanel({
               <div className={styles.aiBlockImproved}>
                 <TokenText text={result.improved} />
               </div>
-
-              <div className={styles.whatChanged}>What changed</div>
-              <div className={styles.aiChecks}>
-                {result.explanation.map((item, index) => (
-                  <div className={styles.aiCheck} key={`${item}-${index}`}>
-                    <Icon name="check" size={14} color="var(--sage)" />
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className={styles.suggestTitle}>Suggested additions</div>
-              <p className={styles.suggestHelp}>Pick any you want to append to your prompt.</p>
-              <div className={styles.suggestList}>
-                {suggestions.map((suggestion) => (
-                  <button className={styles.suggestButton} key={suggestion.id} onClick={() => onToggleSuggestion(suggestion.id)} type="button">
-                    <span className={clsx(styles.suggestCheck, suggestion.checked && styles.suggestCheckOn)}>
-                      {suggestion.checked ? "✓" : ""}
-                    </span>
-                    <span>{suggestion.text}</span>
-                  </button>
-                ))}
-              </div>
             </div>
 
             <div className={styles.aiFooter}>
               <Button variant="primary" size="large" onClick={onApplyImproved}>Apply improved version</Button>
-              <div className={styles.aiFooterRow}>
-                {anySelected ? (
-                  <Button variant="sage" size="large" onClick={onApplySelected}>Apply selected additions</Button>
-                ) : null}
-                <Button variant="secondary" size="large" onClick={onKeepOriginal}>Keep original</Button>
-              </div>
+              <Button variant="secondary" size="large" onClick={onKeepOriginal}>Keep original</Button>
             </div>
           </>
         ) : null}

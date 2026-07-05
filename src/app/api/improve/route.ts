@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { parseTokenNames } from "@/lib/stencil/utils";
 import { NextResponse } from "next/server";
 
 type ImprovePayload = {
@@ -7,11 +8,37 @@ type ImprovePayload = {
   promptId?: string | null;
 };
 
-function asStringArray(value: unknown) {
-  if (Array.isArray(value)) return value.map(String);
-  if (typeof value === "string" && value.trim()) return [value.trim()];
-  return [];
-}
+const IMPROVE_PROMPT_SYSTEM = `You improve reusable prompt templates for a prompt-library app.
+
+Your job is not to give generic writing advice. Read the title and prompt, infer the real task context, and make the prompt more precise, enforceable, and useful for that context.
+
+Hard rules:
+- Preserve every existing {{variable}} token exactly. Do not rename, remove, or invent variable tokens.
+- If the original prompt has no {{variables}}, the improved prompt must also have no {{variables}}.
+- Never wrap new words or placeholders in {{double braces}}.
+- If a missing input should be supplied by the user, describe that in plain language instead of creating a new variable.
+- Keep the user's original intent and workflow.
+- Prefer concrete, testable instructions over vague wording.
+- Do not add broad filler like "be clear" unless it is tied to the task.
+- If the original prompt mentions a project, file, framework, API, database, link, document, design source, MCP server, or external tool, treat that as core context.
+- Do not introduce tools, sources, requirements, frameworks, or workflows that are not implied by the original prompt.
+- Add "ask the user when unclear" behavior when missing information would otherwise require guessing.
+- Add "do not guess" behavior for any work that depends on unavailable source data, project context, designs, requirements, or files.
+
+When the prompt references an external source or tool, improve it by making that source/tool relationship explicit:
+- State what the assistant should inspect or use before answering.
+- State whether that source is authoritative or only supporting context, based on the user's wording.
+- Require the assistant to preserve concrete details from the source instead of approximating them.
+- Require the assistant to ask for clarification when the source is inaccessible, incomplete, or ambiguous.
+
+For coding prompts, strongly prefer adding requirements like:
+- Follow existing project patterns and component structure.
+- Keep the change narrowly scoped.
+- Avoid unrelated refactors.
+- Mention files touched and verification steps.
+
+Return strict JSON with:
+- improved: the rewritten prompt template`;
 
 function asImprovedPrompt(value: unknown, fallback: string) {
   if (typeof value === "string" && value.trim()) return value;
@@ -24,10 +51,25 @@ function asImprovedPrompt(value: unknown, fallback: string) {
   return fallback;
 }
 
+function hasSameVariableTokens(original: string, improved: string) {
+  const originalNames = parseTokenNames(original).sort();
+  const improvedNames = parseTokenNames(improved).sort();
+  return originalNames.length === improvedNames.length && originalNames.every((name, index) => name === improvedNames[index]);
+}
+
+function unwrapInventedVariableTokens(text: string, allowedNames: string[]) {
+  const allowed = new Set(allowedNames);
+  return text.replace(/\{\{\s*([^}]+?)\s*\}\}/g, (match, rawName: string) => {
+    const name = rawName.trim();
+    return allowed.has(name) ? match : name;
+  });
+}
+
 export async function POST(request: Request) {
   const payload = (await request.json()) as ImprovePayload;
   const body = payload.body?.trim() ?? "";
   const promptId = payload.promptId?.trim() ?? "";
+  const existingVariables = parseTokenNames(body);
 
   if (!body) {
     return NextResponse.json({ error: "Add prompt text before asking for improvements." }, { status: 400 });
@@ -82,18 +124,16 @@ export async function POST(request: Request) {
         input: [
           {
             role: "system",
-            content:
-              "You improve prompt templates. Preserve {{variables}} exactly. Return strict JSON with improved, explanation, and suggestions.",
+            content: IMPROVE_PROMPT_SYSTEM,
           },
           {
             role: "user",
             content: JSON.stringify({
               title: payload.title ?? "Untitled prompt",
               prompt: body,
+              existingVariables,
               schema: {
                 improved: "string",
-                explanation: ["short bullet"],
-                suggestions: ["appendable suggestion"],
               },
             }),
           },
@@ -115,6 +155,14 @@ export async function POST(request: Request) {
     }
 
     const parsed = JSON.parse(text);
+    const improved = unwrapInventedVariableTokens(asImprovedPrompt(parsed.improved, body), existingVariables);
+    if (!hasSameVariableTokens(body, improved)) {
+      return NextResponse.json(
+        { error: "AI generated a prompt with different variables. Try again; existing variables must be preserved exactly and no new variables may be added." },
+        { status: 502 },
+      );
+    }
+
     const aiImprovedAt = new Date().toISOString();
     const { data: updatedPrompt, error: updateError } = await supabase
       .from("prompts")
@@ -131,9 +179,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({
-      improved: asImprovedPrompt(parsed.improved, body),
-      explanation: asStringArray(parsed.explanation),
-      suggestions: asStringArray(parsed.suggestions),
+      improved,
       aiImprovedAt: updatedPrompt.ai_improved_at ?? aiImprovedAt,
     });
   } catch (error) {

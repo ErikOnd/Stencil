@@ -13,14 +13,16 @@ export function PromptEditor({
   hasSelection,
   saving,
   deleting,
+  titleError,
+  canImprove,
   onDraft,
   onBodySelect,
   onTagInput,
   onTagKey,
+  onTagCommit,
   onRemoveTag,
   onMark,
   onBack,
-  onPreview,
   onAI,
   onSave,
   onDelete,
@@ -34,14 +36,16 @@ export function PromptEditor({
   hasSelection: boolean;
   saving: boolean;
   deleting: boolean;
+  titleError: string;
+  canImprove: boolean;
   onDraft: (patch: Partial<PromptDraft>) => void;
   onBodySelect: (event: React.SyntheticEvent<HTMLTextAreaElement>) => void;
   onTagInput: (value: string) => void;
   onTagKey: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+  onTagCommit: () => void;
   onRemoveTag: (index: number) => void;
   onMark: () => void;
   onBack: () => void;
-  onPreview: () => void;
   onAI: () => void;
   onSave: () => void;
   onDelete: () => void;
@@ -71,8 +75,7 @@ export function PromptEditor({
                   <Icon name="trash" size={19} />
                 </Button>
               ) : null}
-              <Button variant="secondary" onClick={onPreview}>Preview</Button>
-              <Button variant="sage" icon="sparkle" onClick={onAI}>Improve with AI</Button>
+              {canImprove ? <Button variant="sage" icon="sparkle" onClick={onAI}>Improve with AI</Button> : null}
               <Button variant="primary" loading={saving} onClick={onSave}>Save prompt</Button>
             </div>
           </div>
@@ -83,7 +86,10 @@ export function PromptEditor({
             value={draft.title}
             onInput={(event) => onDraft({ title: event.currentTarget.value })}
             placeholder="Prompt title"
+            aria-invalid={!!titleError}
+            aria-describedby={titleError ? "prompt-title-error" : undefined}
           />
+          {titleError ? <div className={styles.titleError} id="prompt-title-error">{titleError}</div> : null}
           <input
             className={styles.plainDesc}
             value={draft.description}
@@ -103,6 +109,7 @@ export function PromptEditor({
               value={tagInput}
               onInput={(event) => onTagInput(event.currentTarget.value)}
               onKeyDown={onTagKey}
+              onBlur={onTagCommit}
               placeholder="+ tag"
             />
           </div>
