@@ -33,14 +33,17 @@ function displayNameFromUser(user: { email?: string | null; user_metadata?: Reco
 export default async function Home({
 	searchParams,
 }: {
-	searchParams?: Promise<{ mode?: string; layout?: string }>;
+	searchParams?: Promise<{ mode?: string; layout?: string; auth_error?: string }>;
 }) {
 	const params = await searchParams;
 	const layout = params?.layout === "split" ? "Split" : "Centered";
 	const defaultMode = params?.mode === "register" ? "register" : "signin";
+	const authError = params?.auth_error
+		? "Sign-in didn’t complete. Please try again."
+		: "";
 
 	if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-		return <AuthPage layout={layout} defaultMode={defaultMode} />;
+		return <AuthPage layout={layout} defaultMode={defaultMode} errorMessage={authError} />;
 	}
 
 	const supabase = await createClient();
@@ -48,14 +51,14 @@ export default async function Home({
 
 	if (error) {
 		if (isRecoverableAuthSessionError(error)) {
-			return <AuthPage layout={layout} defaultMode={defaultMode} />;
+			return <AuthPage layout={layout} defaultMode={defaultMode} errorMessage={authError} />;
 		}
 
 		throw error;
 	}
 
 	if (!data.user) {
-		return <AuthPage layout={layout} defaultMode={defaultMode} />;
+		return <AuthPage layout={layout} defaultMode={defaultMode} errorMessage={authError} />;
 	}
 
 	await ensureProfile(supabase, data.user);

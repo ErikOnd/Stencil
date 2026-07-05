@@ -63,12 +63,9 @@ export async function signOutAction() {
 export async function deleteAccountAction() {
 	const { supabase, user } = await requireUser();
 
-	const { error: promptError } = await supabase.from("prompts").delete().eq("user_id", user.id);
-	if (promptError) throw promptError;
-
-	const { error: profileError } = await supabase.from("profiles").delete().eq("id", user.id);
-	if (profileError) throw profileError;
-
+	// Create the admin client before touching any data so a missing service
+	// role key fails here instead of after the user's rows are gone. Deleting
+	// the auth user cascades to profiles and prompts (ON DELETE CASCADE).
 	const admin = createAdminClient();
 	const { error: deleteUserError } = await admin.auth.admin.deleteUser(user.id);
 	if (deleteUserError) throw deleteUserError;

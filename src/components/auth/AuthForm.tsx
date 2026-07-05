@@ -16,7 +16,7 @@ type Errors = {
 	password?: string;
 };
 
-export function AuthForm({ defaultMode = "signin" }: { defaultMode?: Mode }) {
+export function AuthForm({ defaultMode = "signin", initialError = "" }: { defaultMode?: Mode; initialError?: string }) {
 	const router = useRouter();
 	const supabase = useMemo(() => createClient(), []);
 	const [mode, setMode] = useState<Mode>(defaultMode);
@@ -29,7 +29,7 @@ export function AuthForm({ defaultMode = "signin" }: { defaultMode?: Mode }) {
 	const [touched, setTouched] = useState(false);
 	const [lastProvider, setLastProvider] = useState<"google" | "apple" | null>(null);
 	const [pendingVerificationEmail, setPendingVerificationEmail] = useState("");
-	const [serverError, setServerError] = useState("");
+	const [serverError, setServerError] = useState(initialError);
 
 	const isRegister = mode === "register";
 	const errors = touched ? validate(mode, name, email, password) : {};

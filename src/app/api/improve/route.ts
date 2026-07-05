@@ -191,10 +191,24 @@ async function improvePrompt(payload: ImprovePayload) {
 	});
 }
 
-export async function POST(request: Request) {
-	const payload = (await request.json()) as ImprovePayload;
+function parsePayload(value: unknown): ImprovePayload | null {
+	if (!value || typeof value !== "object") return null;
 
+	const record = value as Record<string, unknown>;
+	if (record.body !== undefined && typeof record.body !== "string") return null;
+	if (record.title !== undefined && typeof record.title !== "string") return null;
+	if (record.promptId !== undefined && record.promptId !== null && typeof record.promptId !== "string") return null;
+
+	return record as ImprovePayload;
+}
+
+export async function POST(request: Request) {
 	try {
+		const payload = parsePayload(await request.json().catch(() => null));
+		if (!payload) {
+			return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+		}
+
 		return await improvePrompt(payload);
 	} catch (error) {
 		console.error("AI improvement failed", error);
