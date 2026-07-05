@@ -18,7 +18,7 @@
 
 .deleteText {
   margin: 0 0 var(--space-lg);
-  font-size: var(--text-md);
+  @include text-medium;
   line-height: 1.55;
   color: var(--ink2);
 

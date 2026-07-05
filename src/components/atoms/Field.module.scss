@@ -1,10 +1,12 @@
+@use "../../styles/mixins" as *;
+
 .fieldWrap {
   display: block;
 }
 
 .label {
   display: block;
-  font-size: var(--text-sm);
+  @include text-small;
   font-weight: 600;
   color: var(--ink2);
   margin-bottom: var(--space-xs);
@@ -39,7 +41,7 @@
 }
 
 .errorText {
-  font-size: var(--text-sm);
+  @include text-small;
   color: var(--err);
   margin-top: var(--space-2xs);
 }

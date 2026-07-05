@@ -8,9 +8,7 @@
   background: var(--card);
 
   h3 {
-    font-size: var(--text-3xl);
-    font-weight: 700;
-    margin: 0 0 var(--space-xs);
+    margin-bottom: var(--space-xs);
   }
 
   p {
@@ -83,7 +81,7 @@
 
   small {
     color: var(--ink2);
-    font-size: var(--text-sm);
+    @include text-small;
     line-height: 1.35;
   }
 }

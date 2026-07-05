@@ -1,3 +1,5 @@
+@use "../../styles/mixins" as *;
+
 .backButton {
   display: flex;
   align-items: center;
@@ -6,7 +8,7 @@
   border: none;
   cursor: pointer;
   color: var(--ink2);
-  font-size: var(--text-md);
+  @include text-medium;
   font-weight: 600;
   padding: var(--space-xs) var(--space-sm);
   border-radius: var(--radius-sm);

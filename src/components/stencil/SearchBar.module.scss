@@ -1,3 +1,5 @@
+@use "../../styles/mixins" as *;
+
 .searchWrap {
   position: relative;
   width: 290px;
@@ -60,8 +62,8 @@
   right: var(--space-md);
   top: 50%;
   transform: translateY(-50%);
-  font-family: var(--font-mono-stack);
-  font-size: var(--text-xs);
+  font-family: var(--font-mono-stack), monospace;
+  @include text-xsmall;
   color: var(--ink3);
   border: 1px solid var(--line);
   border-radius: var(--radius-2xs);

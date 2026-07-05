@@ -30,40 +30,40 @@
   --font-sans-stack: var(--font-sans), "Hanken Grotesk", -apple-system, sans-serif;
   --font-mono-stack: var(--font-mono), "JetBrains Mono", monospace;
 
-  --space-3xs: 2px;
-  --space-2xs: 4px;
-  --space-xs: 6px;
-  --space-sm: 8px;
-  --space-md: 12px;
-  --space-lg: 16px;
-  --space-xl: 20px;
-  --space-2xl: 24px;
-  --space-3xl: 32px;
-  --space-4xl: 44px;
+  --space-3xs: 0.125rem;
+  --space-2xs: 0.25rem;
+  --space-xs: 0.375rem;
+  --space-sm: 0.5rem;
+  --space-md: 0.75rem;
+  --space-lg: 1rem;
+  --space-xl: 1.25rem;
+  --space-2xl: 1.5rem;
+  --space-3xl: 2rem;
+  --space-4xl: 2.75rem;
 
-  --radius-2xs: 4px;
-  --radius-xs: 6px;
-  --radius-sm: 8px;
-  --radius-md: 10px;
-  --radius-lg: 12px;
-  --radius-xl: 14px;
-  --radius-2xl: 16px;
-  --radius-3xl: 18px;
+  --radius-2xs: 0.25rem;
+  --radius-xs: 0.375rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 0.875rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.125rem;
   --radius-round: 50%;
 
-  --text-2xs: 10.5px;
-  --text-xs: 11px;
-  --text-sm: 12.5px;
-  --text-md: 13.5px;
-  --text-base: 14px;
-  --text-lg: 14.5px;
-  --text-xl: 15.5px;
-  --text-2xl: 17px;
-  --text-3xl: 18px;
-  --text-title: 24px;
-  --text-display: 27px;
-  --text-hero: 38px;
-  --text-logo: 56px;
+  --text-2xs: 0.65rem;
+  --text-xs: 0.7rem;
+  --text-sm: 0.8rem;
+  --text-md: 0.85rem;
+  --text-base: 0.9rem;
+  --text-lg: 0.95rem;
+  --text-xl: 1rem;
+  --text-2xl: 1.05rem;
+  --text-3xl: 1.15rem;
+  --text-title: 1.5rem;
+  --text-display: 1.7rem;
+  --text-hero: 2.4rem;
+  --text-logo: 3.5rem;
 
   --shadow-accent: 0 3px 12px rgba(176, 123, 71, 0.26);
   --shadow-sage: 0 3px 12px rgba(110, 138, 99, 0.28);
@@ -73,25 +73,25 @@
 
 @include respond-above($bp-xl) {
   :root {
-    --text-display: 29px;
-    --space-4xl: 52px;
+    --text-display: 1.8rem;
+    --space-4xl: 3.25rem;
   }
 }
 
 @include respond-below($bp-md) {
   :root {
-    --text-title: 22px;
-    --text-display: 24px;
-    --text-hero: 32px;
-    --text-logo: 44px;
-    --space-3xl: 24px;
-    --space-4xl: 32px;
+    --text-title: 1.4rem;
+    --text-display: 1.5rem;
+    --text-hero: 2rem;
+    --text-logo: 2.75rem;
+    --space-3xl: 1.5rem;
+    --space-4xl: 2rem;
   }
 }
 
 @include respond-below($bp-sm) {
   :root {
-    --text-display: 22px;
-    --text-logo: 38px;
+    --text-display: 1.4rem;
+    --text-logo: 2.4rem;
   }
 }

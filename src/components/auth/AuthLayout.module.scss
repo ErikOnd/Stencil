@@ -43,8 +43,7 @@
 }
 
 .brandName {
-  font-size: var(--text-title);
-  font-weight: 700;
+  @include h2;
   letter-spacing: -0.015em;
 }
 
@@ -53,10 +52,8 @@
   margin-top: auto;
 
   h1 {
-    margin: 0;
     font-size: var(--text-hero);
     line-height: 1.12;
-    font-weight: 700;
     letter-spacing: -0.025em;
     text-wrap: balance;
   }
@@ -81,7 +78,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-md);
-  font-size: var(--text-lg);
+  @include text-large;
   color: var(--ink);
 }
 
@@ -99,8 +96,8 @@
   position: relative;
   margin-top: auto;
   padding-top: 40px;
-  font-family: var(--font-mono-stack);
-  font-size: var(--text-xs);
+  font-family: var(--font-mono-stack), monospace;
+  @include text-xsmall;
   color: var(--ink3);
 }
 

@@ -1,3 +1,5 @@
+@use "../../styles/mixins" as *;
+
 .checkbox {
   width: 18px;
   height: 18px;
@@ -6,7 +8,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--text-xs);
+  @include text-xsmall;
   font-weight: 800;
   color: #fff;
   border: 1.5px solid var(--line2);

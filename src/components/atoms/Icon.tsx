@@ -18,77 +18,77 @@ import variableIcon from "../../../public/assets/icons/variable.svg";
 import styles from "./Icon.module.scss";
 
 export type IconName =
-  | "check"
-  | "chevronLeft"
-  | "clock"
-  | "copy"
-  | "grid"
-  | "logout"
-  | "menu"
-  | "plus"
-  | "search"
-  | "settings"
-  | "sparkle"
-  | "star"
-  | "trash"
-  | "variable";
+	| "check"
+	| "chevronLeft"
+	| "clock"
+	| "copy"
+	| "grid"
+	| "logout"
+	| "menu"
+	| "plus"
+	| "search"
+	| "settings"
+	| "sparkle"
+	| "star"
+	| "trash"
+	| "variable";
 
 type Props = Omit<HTMLAttributes<HTMLSpanElement>, "color" | "style"> & {
-  name: IconName;
-  size?: number;
-  color?: string;
-  fill?: string;
-  stroke?: string;
+	name: IconName;
+	size?: number;
+	color?: string;
+	fill?: string;
+	stroke?: string;
 };
 
 type SvgAsset = string | { src: string };
 
 const iconSources: Record<IconName, SvgAsset> = {
-  check: checkIcon,
-  chevronLeft: chevronLeftIcon,
-  clock: clockIcon,
-  copy: copyIcon,
-  grid: gridIcon,
-  logout: logoutIcon,
-  menu: menuIcon,
-  plus: plusIcon,
-  search: searchIcon,
-  settings: settingsIcon,
-  sparkle: sparkleIcon,
-  star: starIcon,
-  trash: trashIcon,
-  variable: variableIcon,
+	check: checkIcon,
+	chevronLeft: chevronLeftIcon,
+	clock: clockIcon,
+	copy: copyIcon,
+	grid: gridIcon,
+	logout: logoutIcon,
+	menu: menuIcon,
+	plus: plusIcon,
+	search: searchIcon,
+	settings: settingsIcon,
+	sparkle: sparkleIcon,
+	star: starIcon,
+	trash: trashIcon,
+	variable: variableIcon,
 };
 
 export function iconUrl(asset: SvgAsset) {
-  return typeof asset === "string" ? asset : asset.src;
+	return typeof asset === "string" ? asset : asset.src;
 }
 
 export function Icon({
-  name,
-  size = 17,
-  color,
-  fill,
-  stroke,
-  className,
-  "aria-label": ariaLabel,
-  ...props
+	name,
+	size = 17,
+	color,
+	fill,
+	stroke,
+	className,
+	"aria-label": ariaLabel,
+	...props
 }: Props) {
-  const source = name === "star" && fill && fill !== "none" ? starFilledIcon : iconSources[name];
-  const iconColor = color ?? (stroke && stroke !== "none" ? stroke : fill && fill !== "none" ? fill : "currentColor");
+	const source = name === "star" && fill && fill !== "none" ? starFilledIcon : iconSources[name];
+	const iconColor = color ?? (stroke && stroke !== "none" ? stroke : fill && fill !== "none" ? fill : "currentColor");
 
-  return (
-    <span
-      aria-hidden={ariaLabel ? undefined : true}
-      aria-label={ariaLabel}
-      role={ariaLabel ? "img" : undefined}
-      className={clsx(styles.icon, className)}
-      {...props}
-      style={{
-        "--icon-url": `url("${iconUrl(source)}")`,
-        "--icon-size": `${size}px`,
-        "--icon-color": iconColor,
-      } as CSSProperties}
-    />
-  );
+	return (
+		<span
+			aria-hidden={ariaLabel ? undefined : true}
+			aria-label={ariaLabel}
+			role={ariaLabel ? "img" : undefined}
+			className={clsx(styles.icon, className)}
+			{...props}
+			style={{
+				"--icon-url": `url("${iconUrl(source)}")`,
+				"--icon-size": `${size}px`,
+				"--icon-color": iconColor,
+			} as CSSProperties}
+		/>
+	);
 }

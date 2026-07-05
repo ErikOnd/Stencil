@@ -1,11 +1,11 @@
-import { createClient } from "@/lib/supabase/server";
 import { parseTokenNames } from "@/lib/stencil/utils";
+import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
 type ImprovePayload = {
-  body?: string;
-  title?: string;
-  promptId?: string | null;
+	body?: string;
+	title?: string;
+	promptId?: string | null;
 };
 
 const IMPROVE_PROMPT_SYSTEM = `You improve reusable prompt templates for a prompt-library app.
@@ -41,152 +41,166 @@ Return strict JSON with:
 - improved: the rewritten prompt template`;
 
 function asImprovedPrompt(value: unknown, fallback: string) {
-  if (typeof value === "string" && value.trim()) return value;
-  if (value && typeof value === "object") {
-    const record = value as Record<string, unknown>;
-    if (typeof record.prompt === "string" && record.prompt.trim()) return record.prompt;
-    if (typeof record.text === "string" && record.text.trim()) return record.text;
-    if (typeof record.body === "string" && record.body.trim()) return record.body;
-  }
-  return fallback;
+	if (typeof value === "string" && value.trim()) return value;
+	if (value && typeof value === "object") {
+		const record = value as Record<string, unknown>;
+		if (typeof record.prompt === "string" && record.prompt.trim()) return record.prompt;
+		if (typeof record.text === "string" && record.text.trim()) return record.text;
+		if (typeof record.body === "string" && record.body.trim()) return record.body;
+	}
+	return fallback;
 }
 
 function hasSameVariableTokens(original: string, improved: string) {
-  const originalNames = parseTokenNames(original).sort();
-  const improvedNames = parseTokenNames(improved).sort();
-  return originalNames.length === improvedNames.length && originalNames.every((name, index) => name === improvedNames[index]);
+	const originalNames = parseTokenNames(original).sort();
+	const improvedNames = parseTokenNames(improved).sort();
+	return originalNames.length === improvedNames.length
+		&& originalNames.every((name, index) => name === improvedNames[index]);
 }
 
 function unwrapInventedVariableTokens(text: string, allowedNames: string[]) {
-  const allowed = new Set(allowedNames);
-  return text.replace(/\{\{\s*([^}]+?)\s*\}\}/g, (match, rawName: string) => {
-    const name = rawName.trim();
-    return allowed.has(name) ? match : name;
-  });
+	const allowed = new Set(allowedNames);
+	return text.replace(/\{\{\s*([^}]+?)\s*}}/g, (match, rawName: string) => {
+		const name = rawName.trim();
+		return allowed.has(name) ? match : name;
+	});
+}
+
+async function requestImprovedText(title: string, body: string, existingVariables: string[]) {
+	const response = await fetch("https://api.openai.com/v1/responses", {
+		method: "POST",
+		headers: {
+			Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			model: process.env.OPENAI_MODEL,
+			input: [
+				{
+					role: "system",
+					content: IMPROVE_PROMPT_SYSTEM,
+				},
+				{
+					role: "user",
+					content: JSON.stringify({
+						title,
+						prompt: body,
+						existingVariables,
+						schema: {
+							improved: "string",
+						},
+					}),
+				},
+			],
+			text: {
+				format: {
+					type: "json_object",
+				},
+			},
+		}),
+	});
+
+	if (!response.ok) throw new Error(await response.text());
+
+	const data = await response.json();
+	const text = data.output_text ?? data.output?.[0]?.content?.[0]?.text;
+	if (typeof text !== "string" || !text.trim()) {
+		throw new Error("OpenAI response did not include text output.");
+	}
+
+	const parsed = JSON.parse(text);
+	return asImprovedPrompt(parsed.improved, body);
+}
+
+async function improvePrompt(payload: ImprovePayload) {
+	const body = payload.body?.trim() ?? "";
+	const promptId = payload.promptId?.trim() ?? "";
+	const existingVariables = parseTokenNames(body);
+
+	if (!body) {
+		return NextResponse.json({ error: "Add prompt text before asking for improvements." }, { status: 400 });
+	}
+
+	if (!promptId) {
+		return NextResponse.json({ error: "Save this prompt before using AI improvements." }, { status: 400 });
+	}
+
+	if (!process.env.OPENAI_API_KEY) {
+		return NextResponse.json(
+			{ error: "AI improvements are not configured. Add OPENAI_API_KEY to .env.local and restart the dev server." },
+			{ status: 503 },
+		);
+	}
+
+	if (!process.env.OPENAI_MODEL) {
+		return NextResponse.json(
+			{ error: "AI improvements are not configured. Add OPENAI_MODEL to .env.local and restart the dev server." },
+			{ status: 503 },
+		);
+	}
+
+	const supabase = await createClient();
+	const { data: authData, error: authError } = await supabase.auth.getUser();
+	if (authError || !authData.user) {
+		return NextResponse.json({ error: "You must be signed in to improve prompts." }, { status: 401 });
+	}
+
+	const { data: prompt, error: promptError } = await supabase
+		.from("prompts")
+		.select("id, ai_improved_at")
+		.eq("id", promptId)
+		.eq("user_id", authData.user.id)
+		.maybeSingle();
+
+	if (promptError) throw promptError;
+	if (!prompt) return NextResponse.json({ error: "Prompt not found." }, { status: 404 });
+	if (prompt.ai_improved_at) {
+		return NextResponse.json({ error: "This prompt has already been improved with AI." }, { status: 409 });
+	}
+
+	const rawImproved = await requestImprovedText(payload.title ?? "Untitled prompt", body, existingVariables);
+	const improved = unwrapInventedVariableTokens(rawImproved, existingVariables);
+	if (!hasSameVariableTokens(body, improved)) {
+		return NextResponse.json(
+			{
+				error:
+					"AI generated a prompt with different variables. Try again; existing variables must be preserved exactly and no new variables may be added.",
+			},
+			{ status: 502 },
+		);
+	}
+
+	const aiImprovedAt = new Date().toISOString();
+	const { data: updatedPrompt, error: updateError } = await supabase
+		.from("prompts")
+		.update({ ai_improved_at: aiImprovedAt })
+		.eq("id", promptId)
+		.eq("user_id", authData.user.id)
+		.is("ai_improved_at", null)
+		.select("ai_improved_at")
+		.maybeSingle();
+
+	if (updateError) throw updateError;
+	if (!updatedPrompt) {
+		return NextResponse.json({ error: "This prompt has already been improved with AI." }, { status: 409 });
+	}
+
+	return NextResponse.json({
+		improved,
+		aiImprovedAt: updatedPrompt.ai_improved_at ?? aiImprovedAt,
+	});
 }
 
 export async function POST(request: Request) {
-  const payload = (await request.json()) as ImprovePayload;
-  const body = payload.body?.trim() ?? "";
-  const promptId = payload.promptId?.trim() ?? "";
-  const existingVariables = parseTokenNames(body);
+	const payload = (await request.json()) as ImprovePayload;
 
-  if (!body) {
-    return NextResponse.json({ error: "Add prompt text before asking for improvements." }, { status: 400 });
-  }
-
-  if (!promptId) {
-    return NextResponse.json({ error: "Save this prompt before using AI improvements." }, { status: 400 });
-  }
-
-  if (!process.env.OPENAI_API_KEY) {
-    return NextResponse.json(
-      { error: "AI improvements are not configured. Add OPENAI_API_KEY to .env.local and restart the dev server." },
-      { status: 503 },
-    );
-  }
-
-  if (!process.env.OPENAI_MODEL) {
-    return NextResponse.json(
-      { error: "AI improvements are not configured. Add OPENAI_MODEL to .env.local and restart the dev server." },
-      { status: 503 },
-    );
-  }
-
-  try {
-    const supabase = await createClient();
-    const { data: authData, error: authError } = await supabase.auth.getUser();
-    if (authError || !authData.user) {
-      return NextResponse.json({ error: "You must be signed in to improve prompts." }, { status: 401 });
-    }
-
-    const { data: prompt, error: promptError } = await supabase
-      .from("prompts")
-      .select("id, ai_improved_at")
-      .eq("id", promptId)
-      .eq("user_id", authData.user.id)
-      .maybeSingle();
-
-    if (promptError) throw promptError;
-    if (!prompt) return NextResponse.json({ error: "Prompt not found." }, { status: 404 });
-    if (prompt.ai_improved_at) {
-      return NextResponse.json({ error: "This prompt has already been improved with AI." }, { status: 409 });
-    }
-
-    const response = await fetch("https://api.openai.com/v1/responses", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: process.env.OPENAI_MODEL,
-        input: [
-          {
-            role: "system",
-            content: IMPROVE_PROMPT_SYSTEM,
-          },
-          {
-            role: "user",
-            content: JSON.stringify({
-              title: payload.title ?? "Untitled prompt",
-              prompt: body,
-              existingVariables,
-              schema: {
-                improved: "string",
-              },
-            }),
-          },
-        ],
-        text: {
-          format: {
-            type: "json_object",
-          },
-        },
-      }),
-    });
-
-    if (!response.ok) throw new Error(await response.text());
-
-    const data = await response.json();
-    const text = data.output_text ?? data.output?.[0]?.content?.[0]?.text;
-    if (typeof text !== "string" || !text.trim()) {
-      throw new Error("OpenAI response did not include text output.");
-    }
-
-    const parsed = JSON.parse(text);
-    const improved = unwrapInventedVariableTokens(asImprovedPrompt(parsed.improved, body), existingVariables);
-    if (!hasSameVariableTokens(body, improved)) {
-      return NextResponse.json(
-        { error: "AI generated a prompt with different variables. Try again; existing variables must be preserved exactly and no new variables may be added." },
-        { status: 502 },
-      );
-    }
-
-    const aiImprovedAt = new Date().toISOString();
-    const { data: updatedPrompt, error: updateError } = await supabase
-      .from("prompts")
-      .update({ ai_improved_at: aiImprovedAt })
-      .eq("id", promptId)
-      .eq("user_id", authData.user.id)
-      .is("ai_improved_at", null)
-      .select("ai_improved_at")
-      .maybeSingle();
-
-    if (updateError) throw updateError;
-    if (!updatedPrompt) {
-      return NextResponse.json({ error: "This prompt has already been improved with AI." }, { status: 409 });
-    }
-
-    return NextResponse.json({
-      improved,
-      aiImprovedAt: updatedPrompt.ai_improved_at ?? aiImprovedAt,
-    });
-  } catch (error) {
-    console.error("AI improvement failed", error);
-    return NextResponse.json(
-      { error: "AI improvements failed. Check the OpenAI key, model, and server logs, then try again." },
-      { status: 502 },
-    );
-  }
+	try {
+		return await improvePrompt(payload);
+	} catch (error) {
+		console.error("AI improvement failed", error);
+		return NextResponse.json(
+			{ error: "AI improvements failed. Check the OpenAI key, model, and server logs, then try again." },
+			{ status: 502 },
+		);
+	}
 }

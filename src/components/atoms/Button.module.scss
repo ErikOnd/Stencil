@@ -1,3 +1,5 @@
+@use "../../styles/mixins" as *;
+
 .button {
   display: inline-flex;
   align-items: center;
@@ -6,7 +8,7 @@
   border: none;
   border-radius: var(--radius-md);
   font-family: inherit;
-  font-size: var(--text-md);
+  @include text-medium;
   font-weight: 600;
   cursor: pointer;
   transition: filter 0.12s, opacity 0.12s, background 0.12s;
@@ -58,7 +60,7 @@
 
 .small {
   padding: var(--space-xs) var(--space-md);
-  font-size: var(--text-sm);
+  @include text-small;
   border-radius: var(--radius-sm);
 }
 
@@ -68,6 +70,6 @@
 
 .large {
   padding: var(--space-md) var(--space-xl);
-  font-size: var(--text-lg);
+  @include text-large;
   border-radius: var(--radius-lg);
 }

@@ -3,27 +3,27 @@ import { cookies } from "next/headers";
 import type { Database } from "./database.types";
 
 export async function createClient() {
-  const cookieStore = await cookies();
+	const cookieStore = await cookies();
 
-  return createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet, headers) {
-          cookiesToSet.forEach(({ name, value, options }) => {
-            try {
-              cookieStore.set(name, value, options);
-            } catch {
-              return;
-            }
-          });
-          void headers;
-        },
-      },
-    },
-  );
+	return createServerClient<Database>(
+		process.env.NEXT_PUBLIC_SUPABASE_URL!,
+		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+		{
+			cookies: {
+				getAll() {
+					return cookieStore.getAll();
+				},
+				setAll(cookiesToSet, headers) {
+					cookiesToSet.forEach(({ name, value, options }) => {
+						try {
+							cookieStore.set(name, value, options);
+						} catch {
+							return;
+						}
+					});
+					void headers;
+				},
+			},
+		},
+	);
 }

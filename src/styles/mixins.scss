@@ -30,6 +30,39 @@ $bp-xl: 1400px;
   color: var(--ink3);
 }
 
+@mixin h1 {
+  font-size: var(--text-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+@mixin h2 {
+  font-size: var(--text-title);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+@mixin h3 {
+  font-size: var(--text-3xl);
+  font-weight: 700;
+}
+
+@mixin text-large {
+  font-size: var(--text-lg);
+}
+
+@mixin text-medium {
+  font-size: var(--text-md);
+}
+
+@mixin text-small {
+  font-size: var(--text-sm);
+}
+
+@mixin text-xsmall {
+  font-size: var(--text-xs);
+}
+
 @mixin ellipsis {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -37,5 +70,5 @@ $bp-xl: 1400px;
 }
 
 @mixin mono-text {
-  font-family: var(--font-mono-stack);
+  font-family: var(--font-mono-stack), monospace;
 }

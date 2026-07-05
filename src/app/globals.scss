@@ -1,7 +1,23 @@
 @use "../styles/variables";
+@use "../styles/mixins" as *;
 
 * {
   box-sizing: border-box;
+}
+
+h1 {
+  @include h1;
+  margin: 0;
+}
+
+h2 {
+  @include h2;
+  margin: 0;
+}
+
+h3 {
+  @include h3;
+  margin: 0;
 }
 
 html,
@@ -13,7 +29,7 @@ body {
 }
 
 body {
-  font-family: var(--font-sans-stack);
+  font-family: var(--font-sans-stack), sans-serif;
   font-size: var(--text-base);
   color: var(--ink);
   background: var(--bg);

@@ -5,15 +5,13 @@
   padding: var(--space-xl) 0;
 
   h1 {
+    @include h2;
     margin: 0 0 var(--space-sm);
-    font-size: var(--text-title);
-    font-weight: 700;
-    letter-spacing: -0.02em;
   }
 
   p {
     margin: 0 auto var(--space-2xl);
-    font-size: var(--text-lg);
+    @include text-large;
     color: var(--ink2);
     max-width: 300px;
     line-height: 1.55;

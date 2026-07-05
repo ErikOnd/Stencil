@@ -39,6 +39,9 @@ importers:
       '@types/react-dom':
         specifier: ^19
         version: 19.2.3(@types/react@19.2.17)
+      dprint:
+        specifier: ^0.50.2
+        version: 0.50.2
       eslint:
         specifier: ^9
         version: 9.39.4
@@ -117,6 +120,51 @@ packages:
   '@babel/types@7.29.7':
     resolution: {integrity: sha512-4zBIxpPzowiZpusoFkyGVwakdRJUyuH5PxQ/PrqghfdFWWasvnCdPfQXHrenDai+gyLARulZjZowCOj6fjT4pA==}
     engines: {node: '>=6.9.0'}
+
+  '@dprint/darwin-arm64@0.50.2':
+    resolution: {integrity: sha512-4d08INZlTxbPW9LK9W8+93viN543/qA2Kxn4azVnPW/xCb2Im03UqJBz8mMm3nJZdtNnK3uTVG3ib1VW+XJisw==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@dprint/darwin-x64@0.50.2':
+    resolution: {integrity: sha512-ZXWPBwdLojhdBATq+bKwJvB7D8bIzrD6eR/Xuq9UYE7evQazUiR069d9NPF0iVuzTo6wNf9ub9SXI7qDl11EGA==}
+    cpu: [x64]
+    os: [darwin]
+
+  '@dprint/linux-arm64-glibc@0.50.2':
+    resolution: {integrity: sha512-marxQzRw8atXAnaawwZHeeUaaAVewrGTlFKKcDASGyjPBhc23J5fHPUPremm8xCbgYZyTlokzrV8/1rDRWhJcw==}
+    cpu: [arm64]
+    os: [linux]
+
+  '@dprint/linux-arm64-musl@0.50.2':
+    resolution: {integrity: sha512-oGDq44ydzo0ZkJk6RHcUzUN5sOMT5HC6WA8kHXI6tkAsLUkaLO2DzZFfW4aAYZUn+hYNpQfQD8iGew0sjkyLyg==}
+    cpu: [arm64]
+    os: [linux]
+
+  '@dprint/linux-riscv64-glibc@0.50.2':
+    resolution: {integrity: sha512-QMmZoZYWsXezDcC03fBOwPfxhTpPEyHqutcgJ0oauN9QcSXGji9NSZITMmtLz2Ki3T1MIvdaLd1goGzNSvNqTQ==}
+    cpu: [riscv64]
+    os: [linux]
+
+  '@dprint/linux-x64-glibc@0.50.2':
+    resolution: {integrity: sha512-KMeHEzb4teQJChTgq8HuQzc+reRNDnarOTGTQovAZ9WNjOtKLViftsKWW5HsnRHtP5nUIPE9rF1QLjJ/gUsqvw==}
+    cpu: [x64]
+    os: [linux]
+
+  '@dprint/linux-x64-musl@0.50.2':
+    resolution: {integrity: sha512-qM37T7H69g5coBTfE7SsA+KZZaRBky6gaUhPgAYxW+fOsoVtZSVkXtfTtQauHTpqqOEtbxfCtum70Hz1fr1teg==}
+    cpu: [x64]
+    os: [linux]
+
+  '@dprint/win32-arm64@0.50.2':
+    resolution: {integrity: sha512-kuGVHGoxLwssVDsodefUIYQRoO2fQncurH/xKgXiZwMPOSzFcgUzYJQiyqmJEp+PENhO9VT1hXUHZtlyCAWBUQ==}
+    cpu: [arm64]
+    os: [win32]
+
+  '@dprint/win32-x64@0.50.2':
+    resolution: {integrity: sha512-N3l9k31c3IMfVXqL0L6ygIhJFvCIrfQ+Z5Jph6RnCcBO6oDYWeYhAv/qBk1vLsF2y/e79TKsR1tvaEwnrQ03XA==}
+    cpu: [x64]
+    os: [win32]
 
   '@emnapi/core@1.10.0':
     resolution: {integrity: sha512-yq6OkJ4p82CAfPl0u9mQebQHKPJkY7WrIuk205cTYnYe+k2Z8YBh11FrbRG/H6ihirqcacOgl2BIO8oyMQLeXw==}
@@ -940,6 +988,10 @@ packages:
   doctrine@2.1.0:
     resolution: {integrity: sha512-35mSku4ZXK0vfCuHEDAwt55dg2jNajHZ1odvF+8SSr82EsZY4QmXfuWso8oEd8zRhVObSN18aM0CjSdoBX7zIw==}
     engines: {node: '>=0.10.0'}
+
+  dprint@0.50.2:
+    resolution: {integrity: sha512-+0Fzg+17jsMMUouK00/Fara5YtGOuE76EAJINHB8VpkXHd0n00rMXtw/03qorOgz23eo8Y0UpYvNZBJJo3aNtw==}
+    hasBin: true
 
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
@@ -2014,6 +2066,33 @@ snapshots:
       '@babel/helper-string-parser': 7.29.7
       '@babel/helper-validator-identifier': 7.29.7
 
+  '@dprint/darwin-arm64@0.50.2':
+    optional: true
+
+  '@dprint/darwin-x64@0.50.2':
+    optional: true
+
+  '@dprint/linux-arm64-glibc@0.50.2':
+    optional: true
+
+  '@dprint/linux-arm64-musl@0.50.2':
+    optional: true
+
+  '@dprint/linux-riscv64-glibc@0.50.2':
+    optional: true
+
+  '@dprint/linux-x64-glibc@0.50.2':
+    optional: true
+
+  '@dprint/linux-x64-musl@0.50.2':
+    optional: true
+
+  '@dprint/win32-arm64@0.50.2':
+    optional: true
+
+  '@dprint/win32-x64@0.50.2':
+    optional: true
+
   '@emnapi/core@1.10.0':
     dependencies:
       '@emnapi/wasi-threads': 1.2.1
@@ -2781,6 +2860,18 @@ snapshots:
   doctrine@2.1.0:
     dependencies:
       esutils: 2.0.3
+
+  dprint@0.50.2:
+    optionalDependencies:
+      '@dprint/darwin-arm64': 0.50.2
+      '@dprint/darwin-x64': 0.50.2
+      '@dprint/linux-arm64-glibc': 0.50.2
+      '@dprint/linux-arm64-musl': 0.50.2
+      '@dprint/linux-riscv64-glibc': 0.50.2
+      '@dprint/linux-x64-glibc': 0.50.2
+      '@dprint/linux-x64-musl': 0.50.2
+      '@dprint/win32-arm64': 0.50.2
+      '@dprint/win32-x64': 0.50.2
 
   dunder-proto@1.0.1:
     dependencies:

@@ -1,3 +1,5 @@
+@use "../../styles/mixins" as *;
+
 .deleteAck {
   display: flex;
   align-items: flex-start;
@@ -6,7 +8,7 @@
   margin-bottom: var(--space-xl);
 
   span {
-    font-size: var(--text-sm);
+    @include text-small;
     color: var(--ink2);
     line-height: 1.4;
   }

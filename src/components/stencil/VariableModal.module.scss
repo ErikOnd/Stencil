@@ -1,3 +1,5 @@
+@use "../../styles/mixins" as *;
+
 .modalHead {
   display: flex;
   align-items: center;
@@ -17,7 +19,7 @@
 
   label {
     display: block;
-    font-size: var(--text-sm);
+    @include text-small;
     font-weight: 600;
     color: var(--ink2);
     margin-bottom: var(--space-xs);
@@ -48,8 +50,8 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    font-family: var(--font-mono-stack);
-    font-size: var(--text-sm);
+    font-family: var(--font-mono-stack), monospace;
+    @include text-small;
     color: var(--ink3);
 
     &:first-child {
@@ -64,8 +66,8 @@
 
 .modalNameInput {
   padding-inline: 30px;
-  font-family: var(--font-mono-stack);
-  font-size: var(--text-md);
+  font-family: var(--font-mono-stack), monospace;
+  @include text-medium;
   color: var(--varink);
   font-weight: 600;
 }
@@ -84,7 +86,7 @@
   padding: var(--space-sm);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  font-size: var(--text-sm);
+  @include text-small;
   font-weight: 600;
   font-family: inherit;
   border: 1px solid var(--line2);
@@ -99,7 +101,7 @@
 }
 
 .fieldNote {
-  font-size: var(--text-xs);
+  @include text-xsmall;
   color: var(--ink3);
   margin-top: var(--space-xs);
 }
@@ -112,13 +114,13 @@
 
   strong {
     display: block;
-    font-size: var(--text-md);
+    @include text-medium;
     font-weight: 600;
   }
 
   span {
     display: block;
-    font-size: var(--text-sm);
+    @include text-small;
     color: var(--ink3);
   }
 }
