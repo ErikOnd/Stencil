@@ -1,0 +1,97 @@
+@use "./mixins" as *;
+
+:root {
+  --bg: #f3ece0;
+  --panel: #fcf8f0;
+  --card: #fffdf7;
+  --inset: #efe6d6;
+  --line: #e5dac7;
+  --line2: #d8cab2;
+  --ink: #3a322a;
+  --ink2: #8b7c67;
+  --ink3: #b0a28d;
+  --accent: #e08043;
+  --accent-d: #c4692e;
+  --accent-soft: #f8e4cf;
+  --varbg: #f5e3c6;
+  --varink: #8a5825;
+  --varline: #e6cfa3;
+  --sage: #6e8a63;
+  --sage-soft: #e5ebdb;
+  --sage-ink: #4f6647;
+  --sage-line: #cdd8c1;
+  --err: #b4574a;
+  --danger: #a9564a;
+  --danger-soft: #f4e0db;
+  --danger-line: #e8cabe;
+  --danger-hover: #fff8f4;
+  --scrim: rgba(58, 50, 42, 0.32);
+
+  --font-sans-stack: var(--font-sans), "Hanken Grotesk", -apple-system, sans-serif;
+  --font-mono-stack: var(--font-mono), "JetBrains Mono", monospace;
+
+  --space-3xs: 2px;
+  --space-2xs: 4px;
+  --space-xs: 6px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 20px;
+  --space-2xl: 24px;
+  --space-3xl: 32px;
+  --space-4xl: 44px;
+
+  --radius-2xs: 4px;
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 14px;
+  --radius-2xl: 16px;
+  --radius-3xl: 18px;
+  --radius-round: 50%;
+
+  --text-2xs: 10.5px;
+  --text-xs: 11px;
+  --text-sm: 12.5px;
+  --text-md: 13.5px;
+  --text-base: 14px;
+  --text-lg: 14.5px;
+  --text-xl: 15.5px;
+  --text-2xl: 17px;
+  --text-3xl: 18px;
+  --text-title: 24px;
+  --text-display: 27px;
+  --text-hero: 38px;
+  --text-logo: 56px;
+
+  --shadow-accent: 0 3px 12px rgba(176, 123, 71, 0.26);
+  --shadow-sage: 0 3px 12px rgba(110, 138, 99, 0.28);
+  --shadow-pop: 0 10px 30px rgba(58, 50, 42, 0.16);
+  --shadow-modal: 0 24px 60px rgba(58, 50, 42, 0.28);
+}
+
+@include respond-above($bp-xl) {
+  :root {
+    --text-display: 29px;
+    --space-4xl: 52px;
+  }
+}
+
+@include respond-below($bp-md) {
+  :root {
+    --text-title: 22px;
+    --text-display: 24px;
+    --text-hero: 32px;
+    --text-logo: 44px;
+    --space-3xl: 24px;
+    --space-4xl: 32px;
+  }
+}
+
+@include respond-below($bp-sm) {
+  :root {
+    --text-display: 22px;
+    --text-logo: 38px;
+  }
+}

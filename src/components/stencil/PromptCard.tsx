@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon, Tag } from "@/components/atoms";
+import { Button, Icon, IconButton, Tag } from "@/components/atoms";
 import type { PromptRecord } from "@/lib/stencil/types";
 import { displayLastUsed } from "@/lib/stencil/utils";
 import styles from "./PromptCard.module.scss";
@@ -23,12 +23,11 @@ export function PromptCard({
 
   return (
     <div className={styles.promptCard}>
-      <button
+      <IconButton
         className={styles.favButton}
         onClick={() => onFavorite(prompt.id)}
         aria-label={prompt.favorite ? "Remove from favorites" : "Add to favorites"}
         title={prompt.favorite ? "Remove from favorites" : "Add to favorites"}
-        type="button"
       >
         <Icon
           name="star"
@@ -36,7 +35,7 @@ export function PromptCard({
           fill={prompt.favorite ? "var(--accent)" : "none"}
           stroke={prompt.favorite ? "var(--accent)" : "var(--ink3)"}
         />
-      </button>
+      </IconButton>
       <div className={styles.cardTitle}>{prompt.title}</div>
       <p className={styles.cardDescription}>{preview}</p>
       <div className={styles.cardTags}>
@@ -46,33 +45,29 @@ export function PromptCard({
       </div>
       <div className={styles.cardMeta}>
         <span>
-          <span style={{ opacity: 0.85 }}>{"{ }"}</span>
+          <span className={styles.metaGlyph}>{"{ }"}</span>
           {prompt.variables.length} {prompt.variables.length === 1 ? "variable" : "variables"}
         </span>
         <span>·</span>
         <span>
-          <Icon name="clock" size={12} style={{ opacity: 0.8 }} />
+          <Icon name="clock" size={12} className={styles.metaIcon} />
           {displayLastUsed(prompt)}
         </span>
       </div>
       <div className={styles.cardActions}>
-        <button
-          className={copied ? styles.copiedCardButton : styles.useCardButton}
+        <Button
+          variant={copied ? "sageSolid" : "primary"}
+          size="small"
+          icon={copied ? "check" : undefined}
           onClick={() => {
             void onUse(prompt.id);
           }}
-          type="button"
         >
-          {copied ? (
-            <>
-              <Icon name="check" size={15} />
-              Copied
-            </>
-          ) : copiesImmediately ? "Copy" : "Use"}
-        </button>
-        <button className={styles.editCardButton} onClick={() => onEdit(prompt.id)} type="button">
+          {copied ? "Copied" : copiesImmediately ? "Copy" : "Use"}
+        </Button>
+        <Button variant="secondary" size="small" onClick={() => onEdit(prompt.id)}>
           Edit
-        </button>
+        </Button>
       </div>
     </div>
   );

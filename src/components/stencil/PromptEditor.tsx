@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Icon, Tag } from "@/components/atoms";
+import { BackButton, Button, Icon, Tag } from "@/components/atoms";
 import type { PromptDraft } from "@/lib/stencil/types";
 import { TokenText } from "./TokenText";
 import { VariablePanel } from "./VariablePanel";
@@ -58,10 +58,7 @@ export function PromptEditor({
       <div className={styles.editorScroll}>
         <div className={styles.editorInner}>
           <div className={styles.editorTop}>
-            <button className={styles.backButton} onClick={onBack} type="button">
-              <Icon name="chevronLeft" size={16} />
-              Library
-            </button>
+            <BackButton onClick={onBack}>Library</BackButton>
             <div className={styles.editorActions}>
               {editing ? (
                 <Button

@@ -4,6 +4,7 @@ import { Chip, Icon } from "@/components/atoms";
 import type { PromptRecord } from "@/lib/stencil/types";
 import clsx from "clsx";
 import Image from "next/image";
+import { useState } from "react";
 import styles from "./Sidebar.module.scss";
 
 type SidebarProps = {
@@ -94,22 +95,7 @@ export function Sidebar({
       </div>
 
       <div className={styles.accountWrap}>
-        {accountOpen ? (
-          <div className={styles.accountMenu}>
-            <div className={styles.accountHeader}>
-              <strong>{displayName}</strong>
-              {email ? <span>{email}</span> : null}
-            </div>
-            <button className={styles.accountAction} onClick={onLogout} type="button">
-              <Icon name="logout" size={16} />
-              Log out
-            </button>
-            <button className={clsx(styles.accountAction, styles.dangerAction)} onClick={onDelete} type="button">
-              <Icon name="trash" size={16} />
-              Delete account
-            </button>
-          </div>
-        ) : null}
+        {accountOpen ? <AccountMenu displayName={displayName} email={email} onLogout={onLogout} onDelete={onDelete} /> : null}
 
         <button className={clsx(styles.accountButton, accountOpen && styles.accountButtonOpen)} onClick={onToggleAccount} type="button">
           <div className={styles.avatar}>{avatarInitial}</div>
@@ -121,6 +107,49 @@ export function Sidebar({
         </button>
       </div>
     </aside>
+  );
+}
+
+function AccountMenu({
+  displayName,
+  email,
+  onLogout,
+  onDelete,
+}: {
+  displayName: string;
+  email: string;
+  onLogout: () => void;
+  onDelete: () => void;
+}) {
+  const [manageOpen, setManageOpen] = useState(false);
+
+  return (
+    <div className={styles.accountMenu}>
+      <div className={styles.accountHeader}>
+        <strong>{displayName}</strong>
+        {email ? <span>{email}</span> : null}
+      </div>
+      <button className={styles.accountAction} onClick={onLogout} type="button">
+        <Icon name="logout" size={16} />
+        Log out
+      </button>
+      <button
+        className={styles.accountAction}
+        onClick={() => setManageOpen((value) => !value)}
+        aria-expanded={manageOpen}
+        type="button"
+      >
+        <Icon name="settings" size={16} />
+        Manage account
+        <span className={clsx(styles.caret, styles.manageCaret, manageOpen && styles.caretOpen)}>⌄</span>
+      </button>
+      {manageOpen ? (
+        <button className={clsx(styles.accountAction, styles.deleteAction)} onClick={onDelete} type="button">
+          <Icon name="trash" size={15} />
+          Delete account…
+        </button>
+      ) : null}
+    </div>
   );
 }
 
@@ -137,7 +166,7 @@ function NavItem({
 }) {
   return (
     <button className={clsx(styles.navItem, active && styles.navItemActive)} onClick={onClick} type="button">
-      <Icon name={icon} size={17} style={{ opacity: 0.85, fill: icon === "star" && active ? "currentColor" : "none" }} />
+      <Icon name={icon} size={17} className={styles.navIcon} fill={icon === "star" && active ? "currentColor" : "none"} />
       {label}
     </button>
   );

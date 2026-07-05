@@ -1,0 +1,29 @@
+@use "../../styles/mixins" as *;
+
+.deleteIcon {
+  @include flex-center;
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-lg);
+  background: var(--danger-soft);
+  margin-bottom: var(--space-lg);
+  color: var(--danger);
+}
+
+.deleteTitle {
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  margin-bottom: var(--space-xs);
+}
+
+.deleteText {
+  margin: 0 0 var(--space-lg);
+  font-size: var(--text-md);
+  line-height: 1.55;
+  color: var(--ink2);
+
+  strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+}

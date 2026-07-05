@@ -8,7 +8,7 @@ type Client = SupabaseClient<Database>;
 type PromptRow = Database["public"]["Tables"]["prompts"]["Row"];
 type VariableRow = Database["public"]["Tables"]["prompt_variables"]["Row"];
 
-export function mapPrompt(row: PromptRow, variables: VariableRow[]): PromptRecord {
+function mapPrompt(row: PromptRow, variables: VariableRow[]): PromptRecord {
   return {
     id: row.id,
     title: row.title,

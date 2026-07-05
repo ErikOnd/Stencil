@@ -21,7 +21,7 @@ export function isRecoverableAuthSessionError(error: unknown) {
   );
 }
 
-export function getSupabaseAuthCookieName() {
+function getSupabaseAuthCookieName() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   if (!url) return null;
 

@@ -1,7 +1,7 @@
 "use client";
 
-import { Button, Icon, Modal } from "@/components/atoms";
-import styles from "./DeletePromptModal.module.scss";
+import { ConfirmModal } from "./ConfirmModal";
+import styles from "./ConfirmModal.module.scss";
 
 export function DeletePromptModal({
   title,
@@ -15,20 +15,10 @@ export function DeletePromptModal({
   onConfirm: () => void;
 }) {
   return (
-    <Modal width={400}>
-      <div className={styles.deleteIcon}>
-        <Icon name="trash" size={22} />
-      </div>
-      <div className={styles.deleteTitle}>Delete this prompt?</div>
+    <ConfirmModal width={400} title="Delete this prompt?" confirmLabel="Delete prompt" busy={deleting} onCancel={onCancel} onConfirm={onConfirm}>
       <p className={styles.deleteText}>
         <strong>{title || "Untitled prompt"}</strong> will be permanently removed. This cannot be undone.
       </p>
-      <div className={styles.modalActions}>
-        <Button variant="secondary" size="large" disabled={deleting} onClick={onCancel}>Cancel</Button>
-        <Button variant="danger" size="large" loading={deleting} disabled={deleting} onClick={onConfirm}>
-          Delete prompt
-        </Button>
-      </div>
-    </Modal>
+    </ConfirmModal>
   );
 }

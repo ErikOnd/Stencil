@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@/components/atoms";
+import { Button, Icon } from "@/components/atoms";
 import styles from "./AuthSuccess.module.scss";
 
 export function AuthSuccess({ title, subtitle, onReset }: { title: string; subtitle: string; onReset: () => void }) {
@@ -11,9 +11,9 @@ export function AuthSuccess({ title, subtitle, onReset }: { title: string; subti
       </div>
       <h1>{title}</h1>
       <p>{subtitle}</p>
-      <button className={styles.submit} onClick={onReset} type="button" style={{ width: "auto", paddingInline: 22 }}>
+      <Button variant="primary" size="large" onClick={onReset}>
         Back to sign in
-      </button>
+      </Button>
     </div>
   );
 }

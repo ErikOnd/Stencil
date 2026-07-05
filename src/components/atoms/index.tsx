@@ -1,17 +1,20 @@
 import clsx from "clsx";
-import type { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode, TextareaHTMLAttributes } from "react";
+import type { ButtonHTMLAttributes, CSSProperties, InputHTMLAttributes, ReactNode, TextareaHTMLAttributes } from "react";
+import backButtonStyles from "./BackButton.module.scss";
 import badgeStyles from "./Badge.module.scss";
 import buttonStyles from "./Button.module.scss";
 import checkboxStyles from "./Checkbox.module.scss";
 import chipStyles from "./Chip.module.scss";
 import fieldStyles from "./Field.module.scss";
+import glyphStyles from "./FieldTypeGlyph.module.scss";
 import { Icon, type IconName } from "./Icon";
 import iconButtonStyles from "./IconButton.module.scss";
 import modalStyles from "./Modal.module.scss";
+import spinnerStyles from "./Spinner.module.scss";
 import toggleStyles from "./Toggle.module.scss";
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: "primary" | "secondary" | "sage" | "ghost" | "danger";
+  variant?: "primary" | "secondary" | "sage" | "sageSolid" | "ghost" | "danger";
   size?: "small" | "medium" | "large";
   icon?: IconName;
   loading?: boolean;
@@ -19,8 +22,17 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 
 export function Button({ variant = "secondary", size = "medium", icon, loading, className, children, ...props }: ButtonProps) {
   return (
-    <button className={clsx(buttonStyles.button, buttonStyles[variant], buttonStyles[size], className)} {...props}>
-      {loading ? <span className={buttonStyles.spinner} /> : icon ? <Icon name={icon} size={15} /> : null}
+    <button className={clsx(buttonStyles.button, buttonStyles[variant], buttonStyles[size], className)} type="button" {...props}>
+      {loading ? <Spinner /> : icon ? <Icon name={icon} size={15} /> : null}
+      {children}
+    </button>
+  );
+}
+
+export function BackButton({ children = "Back", className, ...props }: ButtonHTMLAttributes<HTMLButtonElement>) {
+  return (
+    <button className={clsx(backButtonStyles.backButton, className)} type="button" {...props}>
+      <Icon name="chevronLeft" size={16} />
       {children}
     </button>
   );
@@ -92,14 +104,43 @@ export function IconButton({ children, className, ...props }: ButtonHTMLAttribut
   );
 }
 
-export function Modal({ children, width = 460 }: { children: ReactNode; width?: number }) {
+export function CloseButton(props: ButtonHTMLAttributes<HTMLButtonElement>) {
+  return (
+    <IconButton className={iconButtonStyles.closeButton} aria-label="Close" {...props}>
+      ×
+    </IconButton>
+  );
+}
+
+export function Spinner({ tone = "light", className }: { tone?: "light" | "dark"; className?: string }) {
+  return <span className={clsx(spinnerStyles.spinner, spinnerStyles[tone], className)} />;
+}
+
+export function FieldTypeGlyph({ multiline }: { multiline?: boolean }) {
+  if (!multiline) return <span className={glyphStyles.line} />;
+  return (
+    <span className={glyphStyles.stack}>
+      <span className={glyphStyles.line} />
+      <span className={glyphStyles.line} />
+    </span>
+  );
+}
+
+export function Modal({ children, width }: { children: ReactNode; width?: number }) {
   return (
     <div className={modalStyles.modalBackdrop}>
-      <div className={modalStyles.modalCard} style={{ width }}>
+      <div
+        className={modalStyles.modalCard}
+        style={width ? ({ "--modal-width": `${width}px` } as CSSProperties) : undefined}
+      >
         {children}
       </div>
     </div>
   );
+}
+
+export function ModalActions({ children }: { children: ReactNode }) {
+  return <div className={modalStyles.modalActions}>{children}</div>;
 }
 
 export function Badge({ children }: { children: ReactNode }) {

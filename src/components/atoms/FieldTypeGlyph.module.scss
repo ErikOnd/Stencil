@@ -1,0 +1,12 @@
+.line {
+  width: 11px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5px;
+}

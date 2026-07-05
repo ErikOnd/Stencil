@@ -1,5 +1,8 @@
 import type { PromptDraft, PromptRecord, PromptVariable } from "./types";
 
+// Must match $bp-md in src/styles/mixins.scss.
+export const MOBILE_BREAKPOINT = 860;
+
 export function blankDraft(): PromptDraft {
   return { title: "", description: "", tags: [], body: "", variables: [] };
 }

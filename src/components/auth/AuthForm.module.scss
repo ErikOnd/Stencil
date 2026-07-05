@@ -1,23 +1,23 @@
 .form {
   h1 {
     margin: 0;
-    font-size: 26px;
+    font-size: var(--text-title);
     font-weight: 700;
     letter-spacing: -0.02em;
   }
 }
 
 .subheading {
-  margin: 7px 0 26px;
-  font-size: 14.5px;
+  margin: var(--space-xs) 0 var(--space-2xl);
+  font-size: var(--text-lg);
   color: var(--ink2);
 }
 
 .divider {
   display: flex;
   align-items: center;
-  gap: 14px;
-  margin: 22px 0;
+  gap: var(--space-md);
+  margin: var(--space-xl) 0;
 
   &::before,
   &::after {
@@ -28,8 +28,8 @@
   }
 
   span {
-    font-family: var(--font-mono), "JetBrains Mono", monospace;
-    font-size: 11px;
+    font-family: var(--font-mono-stack);
+    font-size: var(--text-xs);
     letter-spacing: 0.04em;
     color: var(--ink3);
   }
@@ -38,53 +38,25 @@
 .emailForm {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-}
-
-.fieldGroup {
-  label {
-    display: block;
-    font-size: 12.5px;
-    font-weight: 600;
-    color: var(--ink2);
-    margin-bottom: 6px;
-  }
-}
-
-.input {
-  width: 100%;
-  padding: 11px 13px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: var(--card);
-  font-size: 14px;
-  color: var(--ink);
-  outline: none;
-}
-
-.inputError {
-  border-color: var(--err);
+  gap: var(--space-lg);
 }
 
 .error {
-  font-size: 12px;
+  font-size: var(--text-sm);
   color: var(--err);
-  margin-top: 5px;
+  margin-top: var(--space-2xs);
 }
 
 .passwordHead {
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.passwordHead {
-  margin-bottom: 6px;
+  margin-bottom: var(--space-xs);
 
   label {
     margin: 0;
     display: block;
-    font-size: 12.5px;
+    font-size: var(--text-sm);
     font-weight: 600;
     color: var(--ink2);
   }
@@ -94,39 +66,30 @@
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 12px;
+  font-size: var(--text-sm);
   font-weight: 600;
   color: var(--ink3);
   padding: 0;
 }
 
 .submit {
-  margin-top: 4px;
+  margin-top: var(--space-2xs);
   width: 100%;
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  border-radius: 11px;
-  padding: 13px;
-  font-size: 14.5px;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 3px 12px rgba(176, 123, 71, 0.26);
 }
 
 .modeSwitch {
-  margin-top: 26px;
-  padding-top: 20px;
+  margin-top: var(--space-2xl);
+  padding-top: var(--space-xl);
   border-top: 1px solid var(--line);
   text-align: center;
-  font-size: 13.5px;
+  font-size: var(--text-md);
   color: var(--ink2);
 
   button {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 13.5px;
+    font-size: var(--text-md);
     font-weight: 700;
     color: var(--accent-d);
     padding: 0;

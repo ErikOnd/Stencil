@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge } from "@/components/atoms";
+import { Badge, FieldTypeGlyph } from "@/components/atoms";
 import type { PromptVariable } from "@/lib/stencil/types";
 import { guessMultiline } from "@/lib/stencil/utils";
 import clsx from "clsx";
@@ -43,10 +43,8 @@ export function VariablePanel({
           <div className={styles.noVarsCode}>{"{ }"}</div>
           <strong>No variables yet</strong>
           <p>
-            Select text and hit <span style={{ color: "var(--varink)", fontWeight: 600 }}>Mark as variable</span>, or just type{" "}
-            <span style={{ fontFamily: "var(--font-mono)", color: "var(--varink)", background: "var(--varbg)", borderRadius: 4, padding: "0 4px" }}>
-              {"{{like_this}}"}
-            </span>{" "}
+            Select text and hit <span className={styles.noVarsAction}>Mark as variable</span>, or just type{" "}
+            <span className={styles.noVarsToken}>{"{{like_this}}"}</span>{" "}
             — either way it shows up here.
           </p>
         </div>
@@ -82,14 +80,11 @@ function VariableCard({
       <div className={styles.varPlaceholder}>e.g. {variable.placeholder || "—"}</div>
       <div className={styles.segmented}>
         <button className={clsx(styles.segButton, !multiline && styles.segActive)} onClick={onSingle} title="Single line input" type="button">
-          <span className={styles.mutedLine} />
+          <FieldTypeGlyph />
           Input
         </button>
         <button className={clsx(styles.segButton, multiline && styles.segActive)} onClick={onMulti} title="Multi-line text area" type="button">
-          <span className={styles.stackLines}>
-            <span className={styles.mutedLine} />
-            <span className={styles.mutedLine} />
-          </span>
+          <FieldTypeGlyph multiline />
           Text area
         </button>
       </div>

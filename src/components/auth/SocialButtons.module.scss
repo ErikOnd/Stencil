@@ -1,24 +1,32 @@
 .socials {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--space-sm);
 }
 
 .socialButton {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: var(--space-sm);
   width: 100%;
-  border-radius: 11px;
-  padding: 12px;
-  font-size: 14px;
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  font-size: var(--text-base);
   font-weight: 600;
   cursor: pointer;
 
   &:disabled {
     cursor: default;
   }
+}
+
+.dimmed {
+  opacity: 0.55;
+}
+
+.socialIcon {
+  flex-shrink: 0;
 }
 
 .google {
@@ -31,29 +39,4 @@
   background: var(--ink);
   color: #fff;
   border: 1px solid var(--ink);
-}
-
-.spinDark,
-.spinLight {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  animation: authspin 0.7s linear infinite;
-  flex-shrink: 0;
-}
-
-.spinDark {
-  border: 2px solid var(--line2);
-  border-top-color: var(--ink2);
-}
-
-.spinLight {
-  border: 2px solid rgba(255, 255, 255, 0.35);
-  border-top-color: #fff;
-}
-
-@keyframes authspin {
-  to {
-    transform: rotate(360deg);
-  }
 }

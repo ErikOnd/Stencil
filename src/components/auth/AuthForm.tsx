@@ -1,7 +1,7 @@
 "use client";
 
+import { Button, Input } from "@/components/atoms";
 import { createClient } from "@/lib/supabase/browser";
-import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import styles from "./AuthForm.module.scss";
@@ -119,10 +119,23 @@ export function AuthForm({ defaultMode = "signin" }: { defaultMode?: Mode }) {
 
       <form className={styles.emailForm} onSubmit={submit}>
         {isRegister ? (
-          <Field label="First name" value={name} onInput={(event) => setName(event.currentTarget.value)} placeholder="What should we call you?" error={errors.name} />
+          <Input
+            label="First name"
+            value={name}
+            onInput={(event) => setName(event.currentTarget.value)}
+            placeholder="What should we call you?"
+            error={errors.name}
+          />
         ) : null}
 
-        <Field label="Email" value={email} onInput={(event) => setEmail(event.currentTarget.value)} type="email" placeholder="you@example.com" error={errors.email} />
+        <Input
+          label="Email"
+          value={email}
+          onInput={(event) => setEmail(event.currentTarget.value)}
+          type="email"
+          placeholder="you@example.com"
+          error={errors.email}
+        />
 
         <div>
           <div className={styles.passwordHead}>
@@ -131,20 +144,19 @@ export function AuthForm({ defaultMode = "signin" }: { defaultMode?: Mode }) {
               {showPw ? "Hide" : "Show"}
             </button>
           </div>
-          <input
-            className={clsx(styles.input, errors.password && styles.inputError)}
+          <Input
             value={password}
             onInput={(event) => setPassword(event.currentTarget.value)}
             type={showPw ? "text" : "password"}
             placeholder={isRegister ? "At least 8 characters" : "Your password"}
+            error={errors.password}
           />
-          {errors.password ? <div className={styles.error}>{errors.password}</div> : null}
           {serverError ? <div className={styles.error}>{serverError}</div> : null}
         </div>
 
-        <button className={styles.submit} type="submit">
+        <Button className={styles.submit} variant="primary" size="large" type="submit">
           {isRegister ? "Create account" : "Sign in"}
-        </button>
+        </Button>
       </form>
 
       <div className={styles.modeSwitch}>
@@ -153,16 +165,6 @@ export function AuthForm({ defaultMode = "signin" }: { defaultMode?: Mode }) {
           {isRegister ? "Sign in" : "Create an account"}
         </button>
       </div>
-    </div>
-  );
-}
-
-function Field({ label, error, ...props }: React.InputHTMLAttributes<HTMLInputElement> & { label: string; error?: string }) {
-  return (
-    <div className={styles.fieldGroup}>
-      <label>{label}</label>
-      <input className={clsx(styles.input, error && styles.inputError)} {...props} />
-      {error ? <div className={styles.error}>{error}</div> : null}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 .toggle {
   width: 40px;
   height: 23px;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   border: none;
   cursor: pointer;
   position: relative;
@@ -20,7 +20,7 @@
   left: 3px;
   width: 18px;
   height: 18px;
-  border-radius: 50%;
+  border-radius: var(--radius-round);
   background: #fff;
   transition: left 0.15s;
 }

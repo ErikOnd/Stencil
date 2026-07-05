@@ -1,16 +1,12 @@
 .root {
   min-height: 100vh;
   display: flex;
-  color: var(--ink);
-  background: var(--bg);
-  font-size: 14px;
-  -webkit-font-smoothing: antialiased;
 }
 
 .drawerBackdrop {
   position: fixed;
   inset: 0;
-  background: rgba(58, 50, 42, 0.34);
+  background: var(--scrim);
   z-index: 75;
 }
 

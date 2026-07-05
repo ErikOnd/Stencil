@@ -34,7 +34,7 @@
 
 .searchIcon {
   position: absolute;
-  left: 13px;
+  left: var(--space-md);
   top: 50%;
   transform: translateY(-50%);
   color: var(--ink3);
@@ -45,11 +45,11 @@
 
 .searchInput {
   width: 100%;
-  padding: 10px 44px 10px 38px;
+  padding: var(--space-sm) var(--space-4xl) var(--space-sm) 38px;
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   background: var(--card);
-  font-size: 14px;
+  font-size: var(--text-base);
   color: var(--ink);
   outline: none;
   transition: border-color 0.14s ease, box-shadow 0.14s ease, background 0.14s ease;
@@ -57,15 +57,15 @@
 
 .kbd {
   position: absolute;
-  right: 11px;
+  right: var(--space-md);
   top: 50%;
   transform: translateY(-50%);
-  font-family: var(--font-mono), "JetBrains Mono", monospace;
-  font-size: 11px;
+  font-family: var(--font-mono-stack);
+  font-size: var(--text-xs);
   color: var(--ink3);
   border: 1px solid var(--line);
-  border-radius: 5px;
-  padding: 2px 5px;
+  border-radius: var(--radius-2xs);
+  padding: var(--space-3xs) var(--space-2xs);
   background: var(--panel);
   transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease;
 }

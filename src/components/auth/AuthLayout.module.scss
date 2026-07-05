@@ -1,10 +1,8 @@
+@use "../../styles/mixins" as *;
+
 .root {
   min-height: 100vh;
   display: flex;
-  color: var(--ink);
-  background: var(--bg);
-  font-size: 14px;
-  -webkit-font-smoothing: antialiased;
 }
 
 .brand {
@@ -14,7 +12,7 @@
   flex-shrink: 0;
   background: var(--panel);
   border-right: 1px solid var(--line);
-  padding: 44px 52px;
+  padding: var(--space-4xl) 52px;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -27,7 +25,7 @@
   right: -120px;
   width: 340px;
   height: 340px;
-  border-radius: 50%;
+  border-radius: var(--radius-round);
   background: var(--accent-soft);
   opacity: 0.5;
   filter: blur(8px);
@@ -41,11 +39,11 @@
 }
 
 .brandMark {
-  gap: 11px;
+  gap: var(--space-md);
 }
 
 .brandName {
-  font-size: 23px;
+  font-size: var(--text-title);
   font-weight: 700;
   letter-spacing: -0.015em;
 }
@@ -56,7 +54,7 @@
 
   h1 {
     margin: 0;
-    font-size: 38px;
+    font-size: var(--text-hero);
     line-height: 1.12;
     font-weight: 700;
     letter-spacing: -0.025em;
@@ -64,8 +62,8 @@
   }
 
   p {
-    margin: 18px 0 0;
-    font-size: 15.5px;
+    margin: var(--space-lg) 0 0;
+    font-size: var(--text-xl);
     line-height: 1.6;
     color: var(--ink2);
     max-width: 380px;
@@ -75,27 +73,25 @@
 .featureList {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  margin-top: 32px;
+  gap: var(--space-md);
+  margin-top: var(--space-3xl);
 }
 
 .feature {
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-size: 14.5px;
+  gap: var(--space-md);
+  font-size: var(--text-lg);
   color: var(--ink);
 }
 
 .featureIcon {
+  @include flex-center;
   width: 26px;
   height: 26px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: var(--accent-soft);
   color: var(--accent-d);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   flex-shrink: 0;
 }
 
@@ -103,8 +99,8 @@
   position: relative;
   margin-top: auto;
   padding-top: 40px;
-  font-family: var(--font-mono), "JetBrains Mono", monospace;
-  font-size: 11px;
+  font-family: var(--font-mono-stack);
+  font-size: var(--text-xs);
   color: var(--ink3);
 }
 
@@ -113,7 +109,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 24px;
+  padding: 40px var(--space-2xl);
   min-height: 100vh;
 }
 
@@ -125,21 +121,21 @@
 .centerMark {
   justify-content: flex-start;
   gap: 0;
-  margin-bottom: 34px;
+  margin-bottom: var(--space-3xl);
 }
 
 .centerName {
-  font-size: 56px;
+  font-size: var(--text-logo);
   font-weight: 700;
   letter-spacing: -0.025em;
 }
 
-@media (max-width: 860px) {
+@include respond-below($bp-md) {
   .brand {
     display: none;
   }
 
   .main {
-    padding: 34px 22px;
+    padding: var(--space-3xl) var(--space-xl);
   }
 }

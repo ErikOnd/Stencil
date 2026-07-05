@@ -2,11 +2,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: var(--space-sm);
   border: none;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   font-family: inherit;
-  font-size: 13.5px;
+  font-size: var(--text-md);
   font-weight: 600;
   cursor: pointer;
   transition: filter 0.12s, opacity 0.12s, background 0.12s;
@@ -24,7 +24,7 @@
 .primary {
   background: var(--accent);
   color: #fff;
-  box-shadow: 0 3px 12px rgba(176, 123, 71, 0.26);
+  box-shadow: var(--shadow-accent);
 }
 
 .secondary {
@@ -35,8 +35,14 @@
 
 .sage {
   background: var(--sage-soft);
-  color: #4f6647;
-  border: 1px solid #cdd8c1;
+  color: var(--sage-ink);
+  border: 1px solid var(--sage-line);
+}
+
+.sageSolid {
+  background: var(--sage);
+  color: #fff;
+  box-shadow: var(--shadow-sage);
 }
 
 .ghost {
@@ -46,37 +52,22 @@
 }
 
 .danger {
-  background: #a9564a;
+  background: var(--danger);
   color: #fff;
 }
 
 .small {
-  padding: 7px 12px;
-  font-size: 13px;
-  border-radius: 8px;
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-sm);
 }
 
 .medium {
-  padding: 9px 15px;
+  padding: var(--space-sm) var(--space-lg);
 }
 
 .large {
-  padding: 13px 18px;
-  font-size: 14.5px;
-  border-radius: 11px;
-}
-
-.spinner {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.35);
-  border-top-color: currentColor;
-  animation: atomspin 0.7s linear infinite;
-}
-
-@keyframes atomspin {
-  to {
-    transform: rotate(360deg);
-  }
+  padding: var(--space-md) var(--space-xl);
+  font-size: var(--text-lg);
+  border-radius: var(--radius-lg);
 }

@@ -1,3 +1,5 @@
+@use "../../styles/mixins" as *;
+
 .sessionOverlay {
   position: fixed;
   inset: 0;
@@ -6,7 +8,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: var(--space-2xl);
 }
 
 .sessionCard {
@@ -14,42 +16,38 @@
   max-width: 360px;
 
   h1 {
-    margin: 0 0 8px;
-    font-size: 23px;
+    margin: 0 0 var(--space-sm);
+    font-size: var(--text-title);
     font-weight: 700;
     letter-spacing: -0.02em;
   }
 
   p {
-    margin: 0 auto 26px;
-    font-size: 14.5px;
+    margin: 0 auto var(--space-2xl);
+    font-size: var(--text-lg);
     color: var(--ink2);
     line-height: 1.55;
   }
 }
 
 .sessionBrand {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 30px;
+  @include flex-center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-3xl);
 
   span {
-    font-size: 18px;
+    font-size: var(--text-3xl);
     font-weight: 700;
     letter-spacing: -0.01em;
   }
 }
 
 .sessionIcon {
+  @include flex-center;
   width: 58px;
   height: 58px;
-  border-radius: 50%;
+  border-radius: var(--radius-round);
   background: var(--inset);
-  margin: 0 auto 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin: 0 auto var(--space-xl);
   color: var(--ink3);
 }

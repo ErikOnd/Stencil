@@ -1,12 +1,12 @@
 .chip {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-xs);
   border: none;
-  border-radius: 8px;
-  padding: 5px 11px;
+  border-radius: var(--radius-sm);
+  padding: var(--space-2xs) var(--space-md);
   font-family: inherit;
-  font-size: 12.5px;
+  font-size: var(--text-sm);
   font-weight: 500;
   white-space: nowrap;
   cursor: pointer;
@@ -47,11 +47,11 @@
 .monoPill {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-family: var(--font-mono), "JetBrains Mono", monospace;
-  font-size: 10.5px;
+  gap: var(--space-xs);
+  font-family: var(--font-mono-stack);
+  font-size: var(--text-2xs);
   color: var(--ink2);
   background: var(--inset);
-  border-radius: 6px;
-  padding: 3px 8px;
+  border-radius: var(--radius-xs);
+  padding: var(--space-3xs) var(--space-sm);
 }

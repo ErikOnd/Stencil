@@ -1,44 +1,23 @@
+@use "../../styles/mixins" as *;
+
 .useView {
-  display: flex;
-  height: 100vh;
-}
-
-.useEditor {
-  flex: 1;
-  overflow-y: auto;
-}
-
-.useEditorInner {
   max-width: 560px;
   margin: 0 auto;
-  padding: 22px 36px 90px;
+  padding: var(--space-xl) 36px 90px;
 }
 
 .backButton {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--ink2);
-  font-size: 13.5px;
-  font-weight: 600;
-  padding: 6px 8px;
-  border-radius: 8px;
+  margin: var(--space-xs) 0 var(--space-lg) calc(-1 * var(--space-sm));
 }
 
 .useEyebrow {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--ink3);
+  @include eyebrow;
+  font-size: var(--text-sm);
 }
 
 .useTitle {
-  margin: 0 0 4px;
-  font-size: 24px;
+  margin: 0 0 var(--space-2xs);
+  font-size: var(--text-title);
   font-weight: 700;
   letter-spacing: -0.02em;
 }
@@ -47,12 +26,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 14px 0 20px;
+  margin: var(--space-md) 0 var(--space-xl);
 }
 
 .filledLabel {
-  font-family: var(--font-mono), "JetBrains Mono", monospace;
-  font-size: 11.5px;
+  font-family: var(--font-mono-stack);
+  font-size: var(--text-xs);
   color: var(--ink3);
 }
 
@@ -61,90 +40,56 @@
   border: none;
   cursor: pointer;
   color: var(--ink3);
-  font-size: 12.5px;
+  font-size: var(--text-sm);
   font-weight: 600;
 }
 
 .fieldStack {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: var(--space-lg);
 }
 
-.field {
-  label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 6px;
+.fieldLabel {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  margin-bottom: var(--space-xs);
 
-    span {
-      color: var(--accent-d);
-    }
+  span {
+    color: var(--accent-d);
   }
 }
 
-.runnerInput,
 .runnerTextarea {
-  width: 100%;
-  padding: 11px 13px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: var(--card);
-  font-size: 14px;
-  color: var(--ink);
-  outline: none;
-}
-
-.runnerTextarea {
-  min-height: 96px;
-  font-family: var(--font-mono), "JetBrains Mono", monospace;
-  line-height: 1.5;
-  resize: vertical;
-}
-
-.usePreview {
-  width: 520px;
-  flex-shrink: 0;
-  height: 100vh;
-  border-left: 1px solid var(--line);
-  background: var(--panel);
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
+  font-family: var(--font-mono-stack);
 }
 
 .previewHead {
-  padding: 26px 30px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin: var(--space-3xl) 0 var(--space-md);
 
   strong {
-    font-size: 14px;
+    font-size: var(--text-base);
     font-weight: 700;
   }
 
   span {
-    font-family: var(--font-mono), "JetBrains Mono", monospace;
-    font-size: 11px;
+    font-family: var(--font-mono-stack);
+    font-size: var(--text-xs);
     color: var(--ink3);
   }
-}
-
-.previewBody {
-  flex: 1;
-  overflow-y: auto;
-  padding: 0 30px;
 }
 
 .previewText {
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 22px 24px;
-  font-family: var(--font-mono), "JetBrains Mono", monospace;
-  font-size: 14px;
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl) var(--space-2xl);
+  font-family: var(--font-mono-stack);
+  font-size: var(--text-base);
   line-height: 1.8;
   white-space: pre-wrap;
   word-break: break-word;
@@ -152,83 +97,39 @@
 }
 
 .previewHelp {
-  font-size: 12px;
+  font-size: var(--text-sm);
   color: var(--ink3);
-  margin-top: 12px;
+  margin-top: var(--space-md);
   line-height: 1.5;
 }
 
 .copyBlock {
-  padding: 20px 30px 26px;
-  border-top: 1px solid var(--line);
-  background: var(--panel);
+  margin-top: var(--space-2xl);
   display: flex;
   flex-direction: column;
-  gap: 10px;
-}
+  gap: var(--space-sm);
 
-.copyButton,
-.copiedButton,
-.improveCopyButton {
-  width: 100%;
-  border: none;
-  border-radius: 12px;
-  padding: 15px;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-}
-
-.copyButton {
-  background: var(--accent);
-  color: #fff;
-  box-shadow: 0 3px 12px rgba(176, 123, 71, 0.28);
-}
-
-.copiedButton {
-  background: var(--sage);
-  color: #fff;
-}
-
-.improveCopyButton {
-  background: var(--card);
-  color: #4f6647;
-  border: 1px solid #cdd8c1;
-  border-radius: 11px;
-  padding: 11px;
-  font-size: 13.5px;
-  font-weight: 600;
-}
-
-@media (max-width: 860px) {
-  .useView {
-    flex-direction: column;
-    height: auto;
-    min-height: 100vh;
-  }
-
-  .useEditor {
-    flex: none;
-    overflow: visible;
-  }
-
-  .useEditorInner {
-    padding: 16px 18px 40px;
-  }
-
-  .usePreview {
+  button {
     width: 100%;
-    height: auto;
-    flex-shrink: 0;
-    border-left: none;
-    border-top: 1px solid var(--line);
   }
+}
 
-  .previewBody {
-    padding: 0 18px;
+.improveCopyButton {
+  @include flex-center;
+  width: 100%;
+  background: var(--card);
+  color: var(--sage-ink);
+  border: 1px solid var(--sage-line);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  font-size: var(--text-md);
+  font-weight: 600;
+  cursor: pointer;
+  gap: var(--space-sm);
+}
+
+@include respond-below($bp-md) {
+  .useView {
+    padding: var(--space-lg) var(--space-lg) 40px;
   }
 }

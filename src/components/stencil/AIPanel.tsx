@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Icon } from "@/components/atoms";
+import { Button, CloseButton, Icon } from "@/components/atoms";
 import type { ImproveResult } from "@/lib/stencil/types";
 import { TokenText } from "./TokenText";
 import styles from "./AIPanel.module.scss";
@@ -49,7 +49,7 @@ export function AIPanel({
             </div>
             <div className={styles.aiContext}>{contextLabel}</div>
           </div>
-          <button className={styles.closeButton} onClick={onClose} type="button">×</button>
+          <CloseButton onClick={onClose} />
         </div>
 
         {status === "idle" ? (
@@ -59,7 +59,7 @@ export function AIPanel({
             </div>
             <strong>No improved version yet</strong>
             <p>The assistant will read your prompt and suggest a clearer, more reliable version — you decide what to keep.</p>
-            <Button variant="danger" className={styles.sageRunButton} disabled={running} loading={running} onClick={onRun} style={{ background: "var(--sage)", boxShadow: "0 3px 12px rgba(110,138,99,.28)" }}>
+            <Button variant="sageSolid" disabled={running} loading={running} onClick={onRun}>
               Suggest improvements
             </Button>
           </div>
@@ -70,7 +70,7 @@ export function AIPanel({
             <p>{error || "AI improvements failed. Check your configuration and try again."}</p>
             <div className={styles.aiErrorActions}>
               {canRetryError ? (
-                <Button variant="danger" className={styles.sageRunButton} disabled={running} loading={running} onClick={onRun} style={{ background: "var(--sage)", boxShadow: "0 3px 12px rgba(110,138,99,.28)" }}>
+                <Button variant="sageSolid" disabled={running} loading={running} onClick={onRun}>
                   Try again
                 </Button>
               ) : null}

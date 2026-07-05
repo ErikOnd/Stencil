@@ -4,21 +4,21 @@
 
 .label {
   display: block;
-  font-size: 12.5px;
+  font-size: var(--text-sm);
   font-weight: 600;
   color: var(--ink2);
-  margin-bottom: 6px;
+  margin-bottom: var(--space-xs);
 }
 
 .field {
   width: 100%;
-  padding: 11px 13px;
+  padding: var(--space-md) var(--space-md);
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   background: var(--card);
   color: var(--ink);
   font-family: inherit;
-  font-size: 14px;
+  font-size: var(--text-base);
   outline: none;
 
   &:focus,
@@ -39,7 +39,7 @@
 }
 
 .errorText {
-  font-size: 12px;
+  font-size: var(--text-sm);
   color: var(--err);
-  margin-top: 5px;
+  margin-top: var(--space-2xs);
 }

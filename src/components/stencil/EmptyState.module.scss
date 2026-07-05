@@ -1,59 +1,66 @@
+@use "../../styles/mixins" as *;
+
 .empty {
   text-align: center;
-  padding: 70px 20px;
+  padding: 70px var(--space-xl);
   border: 1px dashed var(--line2);
-  border-radius: 16px;
+  border-radius: var(--radius-2xl);
   background: var(--card);
 
   h3 {
-    font-size: 18px;
+    font-size: var(--text-3xl);
     font-weight: 700;
-    margin: 0 0 6px;
+    margin: 0 0 var(--space-xs);
   }
 
   p {
     color: var(--ink2);
     max-width: 340px;
-    margin: 0 auto 22px;
-    font-size: 14px;
+    margin: 0 auto var(--space-xl);
+    font-size: var(--text-base);
   }
 }
 
 .emptySmall {
-  padding: 60px 20px;
+  padding: 60px var(--space-xl);
 }
 
 .emptyIcon {
+  @include flex-center;
   width: 56px;
   height: 56px;
-  border-radius: 16px;
+  border-radius: var(--radius-2xl);
   background: var(--accent-soft);
   color: var(--accent);
-  margin: 0 auto 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin: 0 auto var(--space-lg);
+}
+
+.emptyIconRound {
+  border-radius: var(--radius-round);
+  background: transparent;
+  border: 2px solid var(--line2);
+  color: var(--ink3);
 }
 
 .examples {
   width: min(100%, 620px);
-  margin: 0 auto 22px;
+  margin: 0 auto var(--space-xl);
   display: grid;
-  gap: 10px;
+  gap: var(--space-sm);
 }
 
 .exampleButton {
   width: 100%;
   min-height: 64px;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   background: rgba(255, 255, 255, 0.64);
   color: var(--ink);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 14px;
-  padding: 13px 15px;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
   text-align: left;
   cursor: pointer;
   box-shadow: 0 8px 20px rgba(60, 46, 36, 0.04);
@@ -70,18 +77,13 @@
   }
 
   strong {
-    font-size: 14px;
+    font-size: var(--text-base);
     line-height: 1.2;
   }
 
   small {
     color: var(--ink2);
-    font-size: 12px;
+    font-size: var(--text-sm);
     line-height: 1.35;
-  }
-
-  svg {
-    flex: 0 0 auto;
-    color: var(--accent);
   }
 }

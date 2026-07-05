@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Modal, Toggle } from "@/components/atoms";
+import { Button, CloseButton, FieldTypeGlyph, Modal, ModalActions, Toggle } from "@/components/atoms";
 import type { PromptVariable } from "@/lib/stencil/types";
 import clsx from "clsx";
 import styles from "./VariableModal.module.scss";
@@ -25,7 +25,7 @@ export function VariableModal({
     <Modal width={460}>
       <div className={styles.modalHead}>
         <strong>{value.editingIndex == null ? "New variable" : "Edit variable"}</strong>
-        <button className={styles.closeButton} onClick={onCancel} type="button">×</button>
+        <CloseButton onClick={onCancel} />
       </div>
 
       <div className={styles.modalFields}>
@@ -63,7 +63,7 @@ export function VariableModal({
               onClick={() => onChange({ multiline: false })}
               type="button"
             >
-              <span className={styles.mutedLine} style={{ width: 14 }} />
+              <FieldTypeGlyph />
               Single line
             </button>
             <button
@@ -71,11 +71,7 @@ export function VariableModal({
               onClick={() => onChange({ multiline: true })}
               type="button"
             >
-              <span className={styles.stackLines} style={{ gap: 2 }}>
-                <span className={styles.mutedLine} style={{ width: 14 }} />
-                <span className={styles.mutedLine} style={{ width: 14 }} />
-                <span className={styles.mutedLine} style={{ width: 9 }} />
-              </span>
+              <FieldTypeGlyph multiline />
               Text area
             </button>
           </div>
@@ -83,7 +79,7 @@ export function VariableModal({
         </div>
         <div>
           <label>
-            Default value <span style={{ color: "var(--ink3)", fontWeight: 500 }}>(optional)</span>
+            Default value <span className={styles.optionalHint}>(optional)</span>
           </label>
           <input
             className={styles.modalInput}
@@ -101,10 +97,10 @@ export function VariableModal({
         </div>
       </div>
 
-      <div className={styles.modalActions}>
+      <ModalActions>
         <Button variant="secondary" size="large" onClick={onCancel}>Cancel</Button>
         <Button variant="primary" size="large" onClick={onSave}>Save variable</Button>
-      </div>
+      </ModalActions>
     </Modal>
   );
 }

@@ -38,7 +38,7 @@ export function EmptyState(props: EmptyStateProps) {
   if (props.kind === "noresults") {
     return (
       <div className={clsx(styles.empty, styles.emptySmall)}>
-        <div className={styles.emptyIcon} style={{ borderRadius: "50%", background: "transparent", border: "2px solid var(--line2)", color: "var(--ink3)" }}>
+        <div className={clsx(styles.emptyIcon, styles.emptyIconRound)}>
           <Icon name="search" size={22} />
         </div>
         <h3>No prompts match “{props.search}”</h3>

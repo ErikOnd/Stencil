@@ -1,0 +1,41 @@
+// $bp-md must stay in sync with MOBILE_BREAKPOINT in src/lib/stencil/utils.ts.
+$bp-sm: 600px;
+$bp-md: 860px;
+$bp-lg: 1100px;
+$bp-xl: 1400px;
+
+@mixin respond-below($bp) {
+  @media (max-width: $bp) {
+    @content;
+  }
+}
+
+@mixin respond-above($bp) {
+  @media (min-width: $bp) {
+    @content;
+  }
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin eyebrow {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+
+@mixin ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin mono-text {
+  font-family: var(--font-mono-stack);
+}

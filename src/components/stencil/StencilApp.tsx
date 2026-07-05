@@ -9,8 +9,8 @@ import {
   touchPromptAction,
 } from "@/app/actions";
 import type { ImproveResult, PromptDraft, PromptRecord, PromptVariable } from "@/lib/stencil/types";
-import { themeVars } from "@/lib/stencil/theme";
 import {
+  MOBILE_BREAKPOINT,
   blankDraft,
   camel,
   cloneDraft,
@@ -120,7 +120,7 @@ export function StencilApp({
     };
 
     const onResize = () => {
-      const mobile = window.innerWidth <= 860;
+      const mobile = window.innerWidth <= MOBILE_BREAKPOINT;
       setIsMobile(mobile);
       if (!mobile) setMenuOpen(false);
     };
@@ -612,7 +612,7 @@ export function StencilApp({
   }
 
   return (
-    <div className={styles.root} style={themeVars()}>
+    <div className={styles.root}>
       {isMobile && menuOpen ? <div className={styles.drawerBackdrop} onClick={() => setMenuOpen(false)} /> : null}
       <Sidebar
         prompts={prompts}
@@ -708,6 +708,7 @@ export function StencilApp({
             target={useTarget}
             values={values}
             copied={copied}
+            canImprove={!useSourceId || !prompts.find((prompt) => prompt.id === useSourceId)?.aiImprovedAt}
             onBack={backFromUse}
             onValue={setValue}
             onReset={resetValues}

@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import type { CSSProperties, HTMLAttributes } from "react";
 import checkIcon from "../../../public/assets/icons/check.svg";
 import chevronLeftIcon from "../../../public/assets/icons/chevron-left.svg";
@@ -8,11 +9,13 @@ import logoutIcon from "../../../public/assets/icons/logout.svg";
 import menuIcon from "../../../public/assets/icons/menu.svg";
 import plusIcon from "../../../public/assets/icons/plus.svg";
 import searchIcon from "../../../public/assets/icons/search.svg";
+import settingsIcon from "../../../public/assets/icons/settings.svg";
 import sparkleIcon from "../../../public/assets/icons/sparkle.svg";
 import starFilledIcon from "../../../public/assets/icons/star-filled.svg";
 import starIcon from "../../../public/assets/icons/star.svg";
 import trashIcon from "../../../public/assets/icons/trash.svg";
 import variableIcon from "../../../public/assets/icons/variable.svg";
+import styles from "./Icon.module.scss";
 
 export type IconName =
   | "check"
@@ -24,12 +27,13 @@ export type IconName =
   | "menu"
   | "plus"
   | "search"
+  | "settings"
   | "sparkle"
   | "star"
   | "trash"
   | "variable";
 
-type Props = Omit<HTMLAttributes<HTMLSpanElement>, "color"> & {
+type Props = Omit<HTMLAttributes<HTMLSpanElement>, "color" | "style"> & {
   name: IconName;
   size?: number;
   color?: string;
@@ -49,13 +53,14 @@ const iconSources: Record<IconName, SvgAsset> = {
   menu: menuIcon,
   plus: plusIcon,
   search: searchIcon,
+  settings: settingsIcon,
   sparkle: sparkleIcon,
   star: starIcon,
   trash: trashIcon,
   variable: variableIcon,
 };
 
-function iconUrl(asset: SvgAsset) {
+export function iconUrl(asset: SvgAsset) {
   return typeof asset === "string" ? asset : asset.src;
 }
 
@@ -65,7 +70,7 @@ export function Icon({
   color,
   fill,
   stroke,
-  style,
+  className,
   "aria-label": ariaLabel,
   ...props
 }: Props) {
@@ -77,17 +82,12 @@ export function Icon({
       aria-hidden={ariaLabel ? undefined : true}
       aria-label={ariaLabel}
       role={ariaLabel ? "img" : undefined}
+      className={clsx(styles.icon, className)}
       {...props}
       style={{
         "--icon-url": `url("${iconUrl(source)}")`,
-        backgroundColor: iconColor,
-        display: "inline-block",
-        flexShrink: 0,
-        width: size,
-        height: size,
-        mask: "var(--icon-url) center / contain no-repeat",
-        WebkitMask: "var(--icon-url) center / contain no-repeat",
-        ...style,
+        "--icon-size": `${size}px`,
+        "--icon-color": iconColor,
       } as CSSProperties}
     />
   );

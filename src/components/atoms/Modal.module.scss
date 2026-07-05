@@ -1,21 +1,31 @@
 .modalBackdrop {
   position: fixed;
   inset: 0;
-  background: rgba(58, 50, 42, 0.32);
+  background: var(--scrim);
   backdrop-filter: blur(2px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 70;
-  padding: 24px;
+  padding: var(--space-2xl);
 }
 
 .modalCard {
-  width: 460px;
+  width: var(--modal-width, 460px);
   max-width: 100%;
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: 18px;
-  box-shadow: 0 24px 60px rgba(58, 50, 42, 0.28);
-  padding: 26px 26px 22px;
+  border-radius: var(--radius-3xl);
+  box-shadow: var(--shadow-modal);
+  padding: var(--space-2xl) var(--space-2xl) var(--space-xl);
+}
+
+.modalActions {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-2xl);
+
+  button {
+    flex: 1;
+  }
 }

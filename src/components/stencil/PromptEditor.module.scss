@@ -1,3 +1,5 @@
+@use "../../styles/mixins" as *;
+
 .editorView {
   display: flex;
   height: 100vh;
@@ -11,39 +13,25 @@
 .editorInner {
   max-width: 760px;
   margin: 0 auto;
-  padding: 22px 40px 90px;
+  padding: var(--space-xl) 40px 90px;
 }
 
 .editorTop {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: var(--space-lg);
   position: sticky;
   top: 0;
   background: linear-gradient(var(--bg), var(--bg) 78%, transparent);
-  padding: 12px 0 16px;
+  padding: var(--space-md) 0 var(--space-lg);
   z-index: 5;
-  margin: 0 -4px;
-}
-
-.backButton {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--ink2);
-  font-size: 13.5px;
-  font-weight: 600;
-  padding: 6px 8px;
-  border-radius: 8px;
+  margin: 0 calc(-1 * var(--space-2xs));
 }
 
 .editorActions {
   display: flex;
-  gap: 9px;
+  gap: var(--space-sm);
 }
 
 .deletePromptButton {
@@ -52,20 +40,17 @@
   height: 40px;
   padding: 0;
   background: var(--card);
-  border-color: #e8cabe;
-  color: #a9564a;
+  border-color: var(--danger-line);
+  color: var(--danger);
 
   &:hover {
-    background: #fff8f4;
+    background: var(--danger-hover);
   }
 }
 
 .editorEyebrow {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--ink3);
+  @include eyebrow;
+  font-size: var(--text-sm);
 }
 
 .plainTitle,
@@ -78,40 +63,40 @@
 }
 
 .plainTitle {
-  font-size: 26px;
+  font-size: var(--text-title);
   font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--ink);
-  margin-bottom: 8px;
+  margin-bottom: var(--space-sm);
 }
 
 .titleError {
-  color: #a9564a;
-  font-size: 13px;
+  color: var(--danger);
+  font-size: var(--text-sm);
   font-weight: 600;
-  margin: -2px 0 10px;
+  margin: calc(-1 * var(--space-3xs)) 0 var(--space-sm);
 }
 
 .plainDesc {
-  font-size: 14.5px;
+  font-size: var(--text-lg);
   color: var(--ink2);
-  margin-bottom: 18px;
+  margin-bottom: var(--space-lg);
 }
 
 .tagEditor {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 7px;
-  margin-bottom: 24px;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-2xl);
 }
 
 .tagInput {
   border: 1px dashed var(--line2);
   background: transparent;
-  border-radius: 7px;
-  padding: 4px 10px;
-  font-size: 12px;
+  border-radius: var(--radius-xs);
+  padding: var(--space-2xs) var(--space-sm);
+  font-size: var(--text-sm);
   color: var(--ink);
   outline: none;
   width: 80px;
@@ -127,34 +112,34 @@
   background: none;
   cursor: pointer;
   color: var(--ink3);
-  font-size: 14px;
+  font-size: var(--text-base);
   line-height: 0;
-  padding: 0 2px;
+  padding: 0 var(--space-3xs);
 }
 
 .selectionRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 10px;
+  gap: var(--space-md);
+  margin-bottom: var(--space-sm);
 }
 
 .selectionHint {
-  font-size: 13px;
+  font-size: var(--text-sm);
   color: var(--ink2);
 }
 
 .markButton {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: var(--space-xs);
   background: var(--varbg);
   color: var(--varink);
-  border: 1px solid #e6cfa3;
-  border-radius: 8px;
-  padding: 7px 13px;
-  font-size: 13px;
+  border: 1px solid var(--varline);
+  border-radius: var(--radius-sm);
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--text-sm);
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
@@ -163,7 +148,7 @@
 .bodyBox {
   position: relative;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--radius-xl);
   background: var(--card);
   overflow: hidden;
 
@@ -174,9 +159,9 @@
 
 .backdrop {
   margin: 0;
-  padding: 20px 22px;
-  font-family: var(--font-mono), "JetBrains Mono", monospace;
-  font-size: 15px;
+  padding: var(--space-xl) var(--space-xl);
+  font-family: var(--font-mono-stack);
+  font-size: var(--text-xl);
   line-height: 1.75;
   white-space: pre-wrap;
   word-break: break-word;
@@ -190,15 +175,15 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  padding: 20px 22px;
+  padding: var(--space-xl) var(--space-xl);
   border: none;
   outline: none;
   resize: none;
   background: transparent;
   color: transparent;
   caret-color: var(--accent);
-  font-family: var(--font-mono), "JetBrains Mono", monospace;
-  font-size: 15px;
+  font-family: var(--font-mono-stack);
+  font-size: var(--text-xl);
   line-height: 1.75;
   white-space: pre-wrap;
   word-break: break-word;
@@ -206,20 +191,20 @@
 }
 
 .editorHelp {
-  font-family: var(--font-mono), "JetBrains Mono", monospace;
-  font-size: 11px;
+  font-family: var(--font-mono-stack);
+  font-size: var(--text-xs);
   color: var(--ink3);
-  margin-top: 10px;
+  margin-top: var(--space-sm);
 
   span {
     color: var(--varink);
     background: var(--varbg);
-    border-radius: 4px;
-    padding: 0 4px;
+    border-radius: var(--radius-2xs);
+    padding: 0 var(--space-2xs);
   }
 }
 
-@media (max-width: 860px) {
+@include respond-below($bp-md) {
   .editorView {
     flex-direction: column;
     height: auto;
@@ -227,7 +212,7 @@
   }
 
   .editorInner {
-    padding: 16px 18px 40px;
+    padding: var(--space-lg) var(--space-lg) 40px;
   }
 
   .editorTop {
