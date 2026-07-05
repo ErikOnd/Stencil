@@ -13,6 +13,7 @@ declare global {
 					initialize: (config: {
 						client_id: string;
 						callback: (response: { credential?: string }) => void;
+						nonce?: string;
 					}) => void;
 					renderButton: (
 						parent: HTMLElement,
@@ -70,10 +71,21 @@ function loadGoogleIdentityScript(): Promise<void> {
 type GoogleIdentityButtonProps = {
 	className?: string;
 	disabled?: boolean;
-	onCredential: (idToken: string) => Promise<void>;
+	onCredential: (idToken: string, nonce: string) => Promise<void>;
 	onError: (message: string) => void;
 	children: ReactNode;
 };
+
+function createRawNonce() {
+	const bytes = new Uint8Array(16);
+	crypto.getRandomValues(bytes);
+	return Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+async function hashNonce(nonce: string) {
+	const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(nonce));
+	return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
 
 export function GoogleIdentityButton({
 	className,
@@ -111,9 +123,11 @@ export function GoogleIdentityButton({
 
 		let cancelled = false;
 		setupErrorRef.current = "";
+		const nonce = createRawNonce();
 
 		void (async () => {
 			try {
+				const hashedNonce = await hashNonce(nonce);
 				await loadGoogleIdentityScript();
 				if (cancelled || !mountRef.current) return;
 
@@ -125,12 +139,13 @@ export function GoogleIdentityButton({
 
 				googleIdentity.initialize({
 					client_id: googleClientId,
+					nonce: hashedNonce,
 					callback: async ({ credential }) => {
 						if (!credential) {
 							onError("Google sign-in failed. Missing identity token.");
 							return;
 						}
-						await onCredential(credential);
+						await onCredential(credential, nonce);
 					},
 				});
 

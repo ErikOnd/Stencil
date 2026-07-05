@@ -58,7 +58,7 @@ export function AuthForm({ defaultMode = "signin" }: { defaultMode?: Mode }) {
 		window.setTimeout(() => router.refresh(), 900);
 	}
 
-	const signInWithGoogleIdToken = useCallback(async (idToken: string) => {
+	const signInWithGoogleIdToken = useCallback(async (idToken: string, nonce: string) => {
 		if (social) return;
 		setSocial("google");
 		setLastProvider("google");
@@ -66,6 +66,7 @@ export function AuthForm({ defaultMode = "signin" }: { defaultMode?: Mode }) {
 		const { error } = await supabase.auth.signInWithIdToken({
 			provider: "google",
 			token: idToken,
+			nonce,
 		});
 		if (error) {
 			setSocial(null);

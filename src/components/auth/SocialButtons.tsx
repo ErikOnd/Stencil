@@ -21,7 +21,7 @@ export function SocialButtons({
 	busy: boolean;
 	social: Provider | null;
 	onApple: () => void;
-	onGoogleCredential: (idToken: string) => Promise<void>;
+	onGoogleCredential: (idToken: string, nonce: string) => Promise<void>;
 	onGoogleError: (message: string) => void;
 }) {
 	return (
