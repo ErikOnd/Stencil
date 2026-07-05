@@ -26,7 +26,9 @@ The schema uses related tables:
 
 All tables have RLS enabled. Prompt variables are protected through their owning prompt. New profiles start with an empty library; prompts are loaded only from saved database rows.
 
-OAuth providers are configured in the Supabase dashboard under Authentication > Providers. Add Google and Apple credentials there.
+Google sign-in uses Google Identity Services in the browser, then exchanges the Google ID token with Supabase. Create a Google OAuth Web client, add its client ID to `NEXT_PUBLIC_GOOGLE_CLIENT_ID`, and add your app origins such as `http://localhost:3000` and `https://stencilprompt.com` to the Google client's Authorized JavaScript origins. The same Google provider should still be enabled in Supabase Authentication > Providers so Supabase can verify the token.
+
+Apple OAuth is configured in the Supabase dashboard under Authentication > Providers.
 
 App redirects are configured in Authentication > URL Configuration. Add this local Redirect URL:
 

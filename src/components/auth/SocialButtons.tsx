@@ -6,6 +6,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import appleIcon from "../../../public/assets/icons/apple.svg";
 import googleIcon from "../../../public/assets/icons/google.svg";
+import { GoogleIdentityButton } from "./GoogleIdentityButton";
 import styles from "./SocialButtons.module.scss";
 
 type Provider = "google" | "apple";
@@ -13,29 +14,42 @@ type Provider = "google" | "apple";
 export function SocialButtons({
 	busy,
 	social,
-	onProvider,
+	onApple,
+	onGoogleCredential,
+	onGoogleError,
 }: {
 	busy: boolean;
 	social: Provider | null;
-	onProvider: (provider: Provider) => void;
+	onApple: () => void;
+	onGoogleCredential: (idToken: string) => Promise<void>;
+	onGoogleError: (message: string) => void;
 }) {
 	return (
 		<div className={styles.socials}>
-			<button
+			<GoogleIdentityButton
 				className={clsx(styles.socialButton, styles.google, busy && social !== "google" && styles.dimmed)}
 				disabled={busy}
-				onClick={() => onProvider("google")}
-				type="button"
+				onCredential={onGoogleCredential}
+				onError={onGoogleError}
 			>
 				{social === "google"
 					? <Spinner tone="dark" />
-					: <Image className={styles.socialIcon} src={iconUrl(googleIcon)} alt="" width={18} height={18} unoptimized />}
+					: (
+						<Image
+							className={styles.socialIcon}
+							src={iconUrl(googleIcon)}
+							alt=""
+							width={18}
+							height={18}
+							unoptimized
+						/>
+					)}
 				<span>{social === "google" ? "Connecting to Google…" : "Continue with Google"}</span>
-			</button>
+			</GoogleIdentityButton>
 			<button
 				className={clsx(styles.socialButton, styles.apple, busy && social !== "apple" && styles.dimmed)}
 				disabled={busy}
-				onClick={() => onProvider("apple")}
+				onClick={onApple}
 				type="button"
 			>
 				{social === "apple"

@@ -3,7 +3,7 @@
 import { Button, Input } from "@/components/atoms";
 import { createClient } from "@/lib/supabase/browser";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import styles from "./AuthForm.module.scss";
 import { AuthSuccess } from "./AuthSuccess";
 import { SocialButtons } from "./SocialButtons";
@@ -58,20 +58,45 @@ export function AuthForm({ defaultMode = "signin" }: { defaultMode?: Mode }) {
 		window.setTimeout(() => router.refresh(), 900);
 	}
 
-	async function startOAuth(provider: "google" | "apple") {
+	const signInWithGoogleIdToken = useCallback(async (idToken: string) => {
 		if (social) return;
-		setSocial(provider);
-		setLastProvider(provider);
+		setSocial("google");
+		setLastProvider("google");
+		setServerError("");
+		const { error } = await supabase.auth.signInWithIdToken({
+			provider: "google",
+			token: idToken,
+		});
+		if (error) {
+			setSocial(null);
+			setServerError(error.message);
+			return;
+		}
+
+		setStage("success");
+		window.setTimeout(() => router.refresh(), 900);
+	}, [router, social, supabase]);
+
+	const handleGoogleError = useCallback((message: string) => {
+		setSocial(null);
+		setServerError(message);
+	}, []);
+
+	const startAppleOAuth = useCallback(async () => {
+		if (social) return;
+		setSocial("apple");
+		setLastProvider("apple");
+		setServerError("");
 		const callbackUrl = new URL("/auth/callback", window.location.origin);
 		const { error } = await supabase.auth.signInWithOAuth({
-			provider,
+			provider: "apple",
 			options: { redirectTo: callbackUrl.toString() },
 		});
 		if (error) {
 			setSocial(null);
 			setServerError(error.message);
 		}
-	}
+	}, [social, supabase]);
 
 	function toggleMode() {
 		setMode((current) => (current === "signin" ? "register" : "signin"));
@@ -111,7 +136,13 @@ export function AuthForm({ defaultMode = "signin" }: { defaultMode?: Mode }) {
 				{isRegister ? "Start building your prompt library." : "Sign in to your prompt library."}
 			</p>
 
-			<SocialButtons busy={!!social} social={social} onProvider={startOAuth} />
+			<SocialButtons
+				busy={!!social}
+				social={social}
+				onApple={startAppleOAuth}
+				onGoogleCredential={signInWithGoogleIdToken}
+				onGoogleError={handleGoogleError}
+			/>
 
 			<div className={styles.divider}>
 				<span>or continue with email</span>
