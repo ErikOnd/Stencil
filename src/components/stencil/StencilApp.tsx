@@ -39,6 +39,8 @@ type LibFilter = "all" | "favorites" | "recent";
 type SessionState = "active" | "out" | "deleted";
 type AIContext = "editor" | "use";
 
+const HISTORY_VIEW_KEY = "__stencilView";
+
 const emptyModal: VariableModalState = {
 	editingIndex: null,
 	name: "",
@@ -49,6 +51,30 @@ const emptyModal: VariableModalState = {
 	multiline: false,
 	range: null,
 };
+
+function historyViewFromState(state: unknown): View | null {
+	if (!state || typeof state !== "object") return null;
+	const value = (state as Record<string, unknown>)[HISTORY_VIEW_KEY];
+	return value === "library" || value === "editor" || value === "use" ? value : null;
+}
+
+function currentHistoryView() {
+	if (typeof window === "undefined") return null;
+	return historyViewFromState(window.history.state);
+}
+
+function writeHistoryView(view: View, mode: "push" | "replace") {
+	if (typeof window === "undefined") return;
+	const currentState = window.history.state;
+	const state = currentState && typeof currentState === "object" ? currentState : {};
+	const nextState = { ...state, [HISTORY_VIEW_KEY]: view };
+	if (mode === "push") window.history.pushState(nextState, "", window.location.href);
+	else window.history.replaceState(nextState, "", window.location.href);
+}
+
+function pushHistoryView(view: View) {
+	writeHistoryView(view, currentHistoryView() === view ? "replace" : "push");
+}
 
 export function StencilApp({
 	initialPrompts,
@@ -89,6 +115,7 @@ export function StencilApp({
 	const [aiResult, setAIResult] = useState<ImproveResult | null>(null);
 	const [aiRunning, setAIRunning] = useState(false);
 	const [useTarget, setUseTarget] = useState<PromptDraft | null>(null);
+	const useTargetRef = useRef<PromptDraft | null>(null);
 	const [useSourceId, setUseSourceId] = useState<string | null>(null);
 	const [useOrigin, setUseOrigin] = useState<"library" | "editor">("library");
 	const [values, setValues] = useState<Record<string, string>>({});
@@ -132,6 +159,30 @@ export function StencilApp({
 		};
 	}, [deletingPrompt, promptToDelete, showAIPanel, showAccountMenu, showDeleteModal, showVarModal, view]);
 
+	useEffect(() => {
+		useTargetRef.current = useTarget;
+	}, [useTarget]);
+
+	useEffect(() => {
+		writeHistoryView("library", "replace");
+
+		const onPopState = (event: PopStateEvent) => {
+			const nextView = historyViewFromState(event.state);
+			if (!nextView) return;
+
+			setMenuOpen(false);
+			setShowAccountMenu(false);
+			setShowAIPanel(false);
+			setShowVarModal(false);
+			setPromptToDelete(null);
+			setTitleError("");
+			setView(nextView === "use" && !useTargetRef.current ? "library" : nextView);
+		};
+
+		window.addEventListener("popstate", onPopState);
+		return () => window.removeEventListener("popstate", onPopState);
+	}, []);
+
 	const hasSelection = selEnd > selStart;
 	const aiContextLabel = aiContext === "use"
 		? "Improving before copy"
@@ -146,9 +197,20 @@ export function StencilApp({
 	}
 
 	function goLibrary() {
+		writeHistoryView("library", "replace");
 		setView("library");
 		setShowAIPanel(false);
 		setTitleError("");
+	}
+
+	function backToPreviousView() {
+		const historyView = currentHistoryView();
+		if (historyView && historyView !== "library") {
+			window.history.back();
+			return;
+		}
+
+		goLibrary();
 	}
 
 	function openEditor(nextDraft: PromptDraft, id: string | null) {
@@ -160,6 +222,7 @@ export function StencilApp({
 		setMenuOpen(false);
 		setEditingId(id);
 		setDraftState(nextDraft);
+		pushHistoryView("editor");
 		setView("editor");
 	}
 
@@ -178,6 +241,7 @@ export function StencilApp({
 
 	function enterUse(target: PromptRecord | PromptDraft, sourceId: string | null, origin: "library" | "editor") {
 		const prompt = cloneDraft(target);
+		pushHistoryView("use");
 		setView("use");
 		setUseTarget(prompt);
 		setUseSourceId(sourceId);
@@ -210,8 +274,15 @@ export function StencilApp({
 	}
 
 	function backFromUse() {
-		if (useOrigin === "editor") setView("editor");
-		else goLibrary();
+		if (currentHistoryView() === "use") {
+			window.history.back();
+			return;
+		}
+
+		if (useOrigin === "editor") {
+			writeHistoryView("editor", "replace");
+			setView("editor");
+		} else goLibrary();
 	}
 
 	function setDraft(patch: Partial<PromptDraft>) {
@@ -364,7 +435,7 @@ export function StencilApp({
 			setTagInput("");
 			const saved = await savePromptAction(draftToSave, editingId);
 			rememberSavedPrompt(saved);
-			setView("library");
+			goLibrary();
 			setLibFilter("all");
 			setActiveTag("All");
 			setSearch("");
@@ -480,6 +551,7 @@ export function StencilApp({
 	function openAI(context: AIContext) {
 		if (context === "editor" && !requirePromptTitle(draft)) return;
 		if (context === "use" && useOrigin === "editor" && useTarget && !requirePromptTitle(useTarget)) {
+			writeHistoryView("editor", "replace");
 			setView("editor");
 			return;
 		}
@@ -719,7 +791,7 @@ export function StencilApp({
 							onTagCommit={addTag}
 							onRemoveTag={removeTag}
 							onMark={markSelection}
-							onBack={goLibrary}
+							onBack={backToPreviousView}
 							onAI={() => openAI("editor")}
 							onSave={saveCurrentPrompt}
 							onDelete={() => editingId && requestPromptDelete(editingId)}
