@@ -316,7 +316,6 @@
 }
 
 @include respond-below($bp-md) {
-  // The mobile top bar already has a "+" button; hide the duplicate CTA in the drawer.
   .newButton {
     display: none;
   }

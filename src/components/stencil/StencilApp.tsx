@@ -267,6 +267,11 @@ export function StencilApp({
 		setSelEnd(target.selectionEnd);
 	}
 
+	function setBodyRange(start: number, end: number) {
+		setSelStart(start);
+		setSelEnd(end);
+	}
+
 	function markSelection() {
 		if (selEnd <= selStart) return;
 		const sourceText = draft.body.slice(selStart, selEnd);
@@ -703,6 +708,7 @@ export function StencilApp({
 							canImprove={!editingId || !prompts.find((prompt) => prompt.id === editingId)?.aiImprovedAt}
 							onDraft={setDraft}
 							onBodySelect={handleBodySelection}
+							onBodyRange={setBodyRange}
 							onTagInput={setTagInput}
 							onTagKey={(event) => {
 								if (event.key === "Enter" || event.key === ",") {
