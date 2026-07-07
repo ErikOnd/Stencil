@@ -1,0 +1,144 @@
+@use "../../styles/mixins" as *;
+
+.quickView {
+  min-height: 100%;
+  padding: var(--space-3xl) var(--space-4xl) var(--space-4xl);
+}
+
+.quickInner {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.quickTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+.quickOptimizer {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-pop);
+}
+
+.quickHead {
+  margin-bottom: var(--space-lg);
+
+  p {
+    margin: var(--space-2xs) 0 0;
+    color: var(--ink2);
+    @include text-small;
+  }
+}
+
+.quickTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+
+  h2 {
+    margin: 0;
+    font-size: var(--text-xl);
+    font-weight: 700;
+  }
+}
+
+.quickActions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+
+  button {
+    white-space: nowrap;
+  }
+}
+
+.quickGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-lg);
+}
+
+.quickField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-width: 0;
+
+  > span {
+    @include eyebrow;
+    color: var(--ink3);
+  }
+
+  textarea,
+  .outputBox {
+    min-height: clamp(220px, 38vh, 360px);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--panel);
+    padding: var(--space-lg);
+    color: var(--ink);
+    font-family: var(--font-mono-stack), monospace;
+    font-size: var(--text-base);
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  textarea {
+    resize: vertical;
+    outline: none;
+
+    &:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(232, 124, 56, 0.1);
+    }
+  }
+}
+
+.outputBox {
+  overflow-y: auto;
+
+  &[data-empty="true"] {
+    color: var(--ink3);
+  }
+}
+
+.errorText {
+  color: var(--danger);
+}
+
+@include respond-below($bp-lg) {
+  .quickGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@include respond-below($bp-sm) {
+  .quickView {
+    padding: var(--space-lg) var(--space-md) 64px;
+  }
+
+  .quickOptimizer {
+    padding: var(--space-lg);
+  }
+
+  .quickTop {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .quickActions {
+    width: 100%;
+
+    button {
+      width: 100%;
+    }
+  }
+}

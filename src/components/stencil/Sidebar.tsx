@@ -9,6 +9,7 @@ import styles from "./Sidebar.module.scss";
 
 type SidebarProps = {
 	prompts: PromptRecord[];
+	activeView: "library" | "editor" | "use" | "quick";
 	activeTag: string;
 	libFilter: "all" | "favorites" | "recent";
 	tagsExpanded: boolean;
@@ -17,6 +18,7 @@ type SidebarProps = {
 	email: string;
 	userName: string;
 	onNew: () => void;
+	onQuickOptimize: () => void;
 	onTag: (tag: string) => void;
 	onToggleTags: () => void;
 	onFilter: (filter: "all" | "favorites" | "recent") => void;
@@ -27,6 +29,7 @@ type SidebarProps = {
 
 export function Sidebar({
 	prompts,
+	activeView,
 	activeTag,
 	libFilter,
 	tagsExpanded,
@@ -35,6 +38,7 @@ export function Sidebar({
 	email,
 	userName,
 	onNew,
+	onQuickOptimize,
 	onTag,
 	onToggleTags,
 	onFilter,
@@ -73,22 +77,28 @@ export function Sidebar({
 
 			<nav className={styles.nav}>
 				<NavItem
-					active={libFilter === "all" && activeTag === "All"}
+					active={activeView === "library" && libFilter === "all" && activeTag === "All"}
 					icon="grid"
 					label="All prompts"
 					onClick={() => onFilter("all")}
 				/>
 				<NavItem
-					active={libFilter === "favorites" && activeTag === "All"}
+					active={activeView === "library" && libFilter === "favorites" && activeTag === "All"}
 					icon="star"
 					label="Favorites"
 					onClick={() => onFilter("favorites")}
 				/>
 				<NavItem
-					active={libFilter === "recent" && activeTag === "All"}
+					active={activeView === "library" && libFilter === "recent" && activeTag === "All"}
 					icon="clock"
 					label="Recently used"
 					onClick={() => onFilter("recent")}
+				/>
+				<NavItem
+					active={activeView === "quick"}
+					icon="sparkle"
+					label="Quick optimizer"
+					onClick={onQuickOptimize}
 				/>
 			</nav>
 
@@ -96,7 +106,11 @@ export function Sidebar({
 				<div className={styles.tagTitle}>Tags</div>
 				<div className={styles.tagList}>
 					{shownTags.map((tag) => (
-						<Chip key={tag} active={activeTag === tag} onClick={() => onTag(tag)}>
+						<Chip
+							key={tag}
+							active={activeView === "library" && activeTag === tag}
+							onClick={() => onTag(tag)}
+						>
 							{tag}
 						</Chip>
 					))}
@@ -184,7 +198,7 @@ function NavItem({
 	onClick,
 }: {
 	active: boolean;
-	icon: "grid" | "star" | "clock";
+	icon: "grid" | "star" | "clock" | "sparkle";
 	label: string;
 	onClick: () => void;
 }) {

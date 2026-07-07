@@ -8,6 +8,7 @@ import {
 	toggleFavoriteAction,
 	touchPromptAction,
 } from "@/app/actions";
+import { copyTextToClipboard } from "@/lib/stencil/clipboard";
 import type { ImproveResult, PromptDraft, PromptRecord, PromptVariable } from "@/lib/stencil/types";
 import {
 	blankDraft,
@@ -29,12 +30,13 @@ import { LibraryView } from "./LibraryView";
 import { MobileTopBar } from "./MobileTopBar";
 import { PromptEditor } from "./PromptEditor";
 import { PromptRunner } from "./PromptRunner";
+import { QuickOptimizer } from "./QuickOptimizer";
 import { SessionOverlay } from "./SessionOverlay";
 import { Sidebar } from "./Sidebar";
 import styles from "./StencilApp.module.scss";
 import { VariableModal, type VariableModalState } from "./VariableModal";
 
-type View = "library" | "editor" | "use";
+type View = "library" | "editor" | "use" | "quick";
 type LibFilter = "all" | "favorites" | "recent";
 type SessionState = "active" | "out" | "deleted";
 type AIContext = "editor" | "use";
@@ -55,7 +57,7 @@ const emptyModal: VariableModalState = {
 function historyViewFromState(state: unknown): View | null {
 	if (!state || typeof state !== "object") return null;
 	const value = (state as Record<string, unknown>)[HISTORY_VIEW_KEY];
-	return value === "library" || value === "editor" || value === "use" ? value : null;
+	return value === "library" || value === "editor" || value === "use" || value === "quick" ? value : null;
 }
 
 function currentHistoryView() {
@@ -213,6 +215,17 @@ export function StencilApp({
 		goLibrary();
 	}
 
+	function openQuickOptimizer() {
+		setMenuOpen(false);
+		setShowAIPanel(false);
+		setShowVarModal(false);
+		setShowAccountMenu(false);
+		setPromptToDelete(null);
+		setTitleError("");
+		pushHistoryView("quick");
+		setView("quick");
+	}
+
 	function openEditor(nextDraft: PromptDraft, id: string | null) {
 		setShowAIPanel(false);
 		setTitleError("");
@@ -261,7 +274,7 @@ export function StencilApp({
 			return;
 		}
 
-		await copyText(prompt.body);
+		await copyTextToClipboard(prompt.body);
 		setCopiedPromptId(id);
 		window.setTimeout(() => setCopiedPromptId((current) => (current === id ? null : current)), 1800);
 
@@ -502,7 +515,7 @@ export function StencilApp({
 	async function copyFinal() {
 		if (!useTarget) return;
 		const text = finalText(useTarget.body, values);
-		await copyText(text);
+		await copyTextToClipboard(text);
 
 		setCopied(true);
 		window.setTimeout(() => setCopied(false), 1800);
@@ -516,19 +529,6 @@ export function StencilApp({
 			} catch {
 				return;
 			}
-		}
-	}
-
-	async function copyText(text: string) {
-		try {
-			await navigator.clipboard.writeText(text);
-		} catch {
-			const textarea = document.createElement("textarea");
-			textarea.value = text;
-			document.body.appendChild(textarea);
-			textarea.select();
-			document.execCommand("copy");
-			document.body.removeChild(textarea);
 		}
 	}
 
@@ -711,6 +711,7 @@ export function StencilApp({
 			{isMobile && menuOpen ? <div className={styles.drawerBackdrop} onClick={() => setMenuOpen(false)} /> : null}
 			<Sidebar
 				prompts={prompts}
+				activeView={view}
 				activeTag={activeTag}
 				libFilter={libFilter}
 				tagsExpanded={tagsExpanded}
@@ -719,12 +720,15 @@ export function StencilApp({
 				email={email}
 				userName={userName}
 				onNew={newPrompt}
+				onQuickOptimize={openQuickOptimizer}
 				onTag={(tag) => {
+					goLibrary();
 					setActiveTag(tag);
 					setMenuOpen(false);
 				}}
 				onToggleTags={() => setTagsExpanded((value) => !value)}
 				onFilter={(filter) => {
+					goLibrary();
 					setLibFilter(filter);
 					setActiveTag("All");
 					setSearch("");
@@ -801,6 +805,8 @@ export function StencilApp({
 						/>
 					)
 					: null}
+
+				{view === "quick" ? <QuickOptimizer onBack={backToPreviousView} /> : null}
 
 				{view === "use" && useTarget
 					? (

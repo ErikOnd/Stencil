@@ -6,6 +6,7 @@ type ImprovePayload = {
 	body?: string;
 	title?: string;
 	promptId?: string | null;
+	quick?: boolean;
 };
 
 const IMPROVE_PROMPT_SYSTEM = `You improve reusable prompt templates for a prompt-library app.
@@ -124,13 +125,14 @@ async function requestImprovedText(title: string, body: string, existingVariable
 async function improvePrompt(payload: ImprovePayload) {
 	const body = payload.body?.trim() ?? "";
 	const promptId = payload.promptId?.trim() ?? "";
+	const quick = payload.quick === true;
 	const existingVariables = parseTokenNames(body);
 
 	if (!body) {
 		return NextResponse.json({ error: "Add prompt text before asking for improvements." }, { status: 400 });
 	}
 
-	if (!promptId) {
+	if (!quick && !promptId) {
 		return NextResponse.json({ error: "Save this prompt before using AI improvements." }, { status: 400 });
 	}
 
@@ -152,6 +154,22 @@ async function improvePrompt(payload: ImprovePayload) {
 	const { data: authData, error: authError } = await supabase.auth.getUser();
 	if (authError || !authData.user) {
 		return NextResponse.json({ error: "You must be signed in to improve prompts." }, { status: 401 });
+	}
+
+	if (quick) {
+		const rawImproved = await requestImprovedText(payload.title ?? "Quick optimizer", body, existingVariables);
+		const improved = unwrapInventedVariableTokens(rawImproved, existingVariables);
+		if (!hasSameVariableTokens(body, improved)) {
+			return NextResponse.json(
+				{
+					error:
+						"AI generated a prompt with different variables. Try again; existing variables must be preserved exactly and no new variables may be added.",
+				},
+				{ status: 502 },
+			);
+		}
+
+		return NextResponse.json({ improved });
 	}
 
 	const { data: prompt, error: promptError } = await supabase
@@ -207,6 +225,7 @@ function parsePayload(value: unknown): ImprovePayload | null {
 	if (record.body !== undefined && typeof record.body !== "string") return null;
 	if (record.title !== undefined && typeof record.title !== "string") return null;
 	if (record.promptId !== undefined && record.promptId !== null && typeof record.promptId !== "string") return null;
+	if (record.quick !== undefined && typeof record.quick !== "boolean") return null;
 
 	return record as ImprovePayload;
 }
